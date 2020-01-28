@@ -1,11 +1,42 @@
 \documentclass[a4paper]{article}
 
-\usepackage[T1]{fontenc}		% F�r svenska bokst�ver
-\usepackage[swedish]{babel}		% F�r svensk avstavning och svenska
-					% rubriker (t ex "inneh�llsf�rteckning)
+\usepackage[T1]{fontenc}	
+\usepackage{amsmath}
 
 \begin{document}
+ 
+\section*{Random Number Generation}
 
-Hej, hopp.
+\subsection*{1)}
+
+\subsubsection*{a)}
+
+\begin{equation}
+     \begin{gathered}
+        F_{X|x\in{I}}(x) = P(X < x | X \in I) \\
+        = P(F_X^{-1}(U) < x | F_X^{-1}(U) \in I) \\
+        = P(F_X^{-1}((F_X(b)-F_X(a))U+F_X(a)) < x) \\
+        = P((F_X(b)-F_X(a))U + F_X(a) < F_X(x)) \\
+        = P(U < \frac{F_X(x)-F_X(a)}{F_X(b)-F_X(a)})
+        = \frac{F_X(x)-F_X(a)}{F_X(b)-F_X(a)}
+     \end{gathered}
+\end{equation}
+
+Annat sätt att räkna
+
+\begin{equation}
+    F_{X|\in{I}}(x) = \frac{\int_a^xf_X(x)dx}{c} = \frac{\int_a^xf_X(x)dx}{\int_a^bf_X(x)dx} = \frac{F_X(x)-F_X(a)}{F_X(b)-F_X(a)}
+\end{equation}
+
+\begin{equation}
+    f_{X|\in{I}}(x) = \frac{dF_{X|\in{I}}(x)}{dx} = \frac{f_X(x)}{F_X(b)-F_X(a)}
+\end{equation}
+
+\subsubsection*{b)}
+
+\begin{equation}
+    F_{X|\in{I}}^{-1}(x) = F_X^{-1}((F_X(b)- F_X(a))x + F_X(a))
+\end{equation}
+
 
 \end{document}
