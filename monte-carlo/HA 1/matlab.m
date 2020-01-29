@@ -83,3 +83,14 @@ subplot(212)
 d = u./g;
 plot(y,d)
 
+
+%%
+i = 0;
+A = [];
+steps = 0.001;
+limit = 30;
+
+for n = 1:limit/steps
+   A = [A P(i)];
+   i = i + steps;
+end
