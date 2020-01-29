@@ -75,7 +75,7 @@ hold on
 gmean = 13;
 gvar = 4.5;
 gscale = 2.8*10e5;
-g = gscale*normpdf(y,gmean,gvar);
+g = gscale*(y,gmean,gvar);
 plot(y,g);
 hold off
 
