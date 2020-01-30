@@ -2,6 +2,7 @@
 
 \usepackage[T1]{fontenc}	
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 \begin{document}
  
@@ -37,6 +38,52 @@ Annat sätt att räkna
 \begin{equation}
     F_{X|\in{I}}^{-1}(x) = F_X^{-1}((F_X(b)- F_X(a))x + F_X(a))
 \end{equation}
+\newpage
+\section*{Power Production of a Wind Turbine}
+
+\subsection*{a) Regular Monte-Carlo sampling}
+To calculate an initial estimate of the power production of the Wind Turbine we start by sampling the power production using regular Monte-Carlo sampling. We begin by generating $10^5$ samples of wind distributed by a Weibull distribution. We then calculate the generated power for each wind sample and then find the average and the variance for each month. The estimate is calculated as follows:
+\begin{equation}
+    \tau = \mathbb{E}[\phi(X)] = \frac{1}{N}\sum_{i = 1}^N\phi(X_i)
+\end{equation}
+And since the sample size is large we can also assume that the central limit theorem applies, giving us:
+\begin{equation}
+    \mathbb{V}[\sqrt{N}(\tau_N-\tau)] = N\mathbb{V}[\tau_N-\tau] = \mathbb{V}[\phi(X)]
+\end{equation}
+In this case the stochastic variable $X$ is the wind speed and $\phi(X)$ is the power curve function for the wind turbine.
+
+For each month we then get the following 95\% confidence intervals of the estimates.
+
+\begin{center}
+    \begin{table}
+        \caption{Monte Carlo estimates and confidence intervals of power production for each month of the year}
+        \label{MCresults}
+        \begin{tabular}{|c|| c c c c c c c c c c c c ||}
+            \hline
+            Month & Jan & Feb & Mar & Apr & May & Jun & Jul & Aug & Sep & Oct & Nov & Dec \\
+            \hline\hline
+            $\tau$ & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            \hline
+            $\mathbb{V}[\phi(X)]$ & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \hline
+            $I_{95\%}$ & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \hline
+
+        \end{tabular}
+    \end{table}
+\end{center}
+
+\subsection*{b) Importance Sampling}
+To reduce the variance of the Monte-Carlo estimate we will here apply the importance sampling method. When we generate random wind samples we sometimes get samples of wind speed that give us a power production of zero. These samples give do not help finding a better estimate of the average power, as they only increase the variance of the estimator. Instead, we try to find an instrumental density g where we then draw our wind samples from. This reduces the amount of "bad" samples and reduces the variance of the estimator. \\
+\newline
+\noindent To find an estimate of the average power production we use the following calculations, where the density $g(x)$ is a density such as $g(x) = 0 \rightarrow \phi(x)f(x) = 0$
+\begin{equation}
+    \tau = \mathbb{E}_f(\phi(X)) = 
+\end{equation}
+
+\subsection*{c) Antithetic sampling}
+
+
 
 
 \end{document}
