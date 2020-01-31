@@ -24,18 +24,18 @@
 \maketitle
 
 \section{Introduction}
-The purpose of this exercise is to implement and evaluate different methods to estimate Value-at-Risk. The data used in the exercise consist of price observations for a given US-stock market portfolio observed between 2006 - 2008. Value at risk is estimated and evaluated for 2008. The different methods is then compared.
+The purpose of this exercise is to implement and evaluate different methods to estimate Value-at-Risk. The data used in the exercise consist of price observations for a given US-stock market portfolio observed between 2006 - 2008. Value at risk is estimated and evaluated for 2008. In the results we conclude that the historical models gives a steadier results, but have harder capturing the changes in volatility compared to the models based on GARCH.
 
 \section{Empirical Results}
 The exercise was solved by using Excel and the plots was made with the help of python.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \includegraphics[width=\textwidth]{VaR1.png}
     \caption{Observed loss compared to $VaR_{99\%}$ estimates based on historical volatility}
     \label{var1}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \includegraphics[width=\textwidth]{VaR2.png}
     \caption{Observed loss compared to $VaR_{99\%}$ estimates based on EWMA volatility predictions}
     \label{var2}
@@ -43,7 +43,18 @@ The exercise was solved by using Excel and the plots was made with the help of p
 
 \begin{table}[htbp]
 	\centering
-    \caption{VarTable}
+    \caption{95\% Confidence Interval}
+    \vspace{0.2cm}
+    \begin{tabular}{|c|c|}
+        \hline
+        Lower Bound & 0  \\ \hline
+        Upper Bound & 6  \\\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+    \caption{Number Of Violations}
     \vspace{0.2cm}
     \begin{tabular}{|m{1.8cm}|*6{m{1.1cm}|}}
         \hline
