@@ -26,6 +26,13 @@
 \section{Introduction}
 The purpose of this exercise is to implement and evaluate different methods to estimate Value-at-Risk. The data used in the exercise consist of price observations for a given US-stock market portfolio observed between 2006 - 2008. Value at risk is estimated and evaluated for 2008. In the results we conclude that the historical models gives a steadier results, but have harder capturing the changes in volatility compared to the models based on GARCH.
 
+\section{Method}
+In this excercise three different methods of estimating VaR will be used. On top of that, the volatility of the loss function will be estimated in two different ways, resulting in 6 different VaR estimates.
+
+The VaR is estimated by using the 99\% percentile of an assumed loss function. For the regular estimate this is done using Microsoft Excel's PERCENTILE.INC() function. Furthermore, the VaR is also estimated by assuming that the loss function follows a normal dristribution and a T-distribution and then finding the corresponding 99\% percentile.
+
+
+
 \section{Empirical Results}
 The exercise was solved by using Excel and the plots was made with the help of python.
 
@@ -65,7 +72,8 @@ The exercise was solved by using Excel and the plots was made with the help of p
 
 
 \section{Conclusion}
-As seen when comparing figure \ref{var1} and figure \ref{var2}, using an EWMA volatility predictor gives us a better VaR-estimate. In fact, the only VaR estimate that manages to pass the Kupiec test is the EWMA T-distribution estimate. However, both methods have their pros and cons. Even though the EWMA methods better manage to follow the market when volatility spikes, it also has a higher variance in estimates, and tends to over-react some times. This gives a higher VaR-estimate than necessary. When volatility is rather constant the historical volatility estimates give a lower VaR without causing too many violations. \newline
+As seen when comparing figure \ref{var1} and figure \ref{var2}, using an EWMA volatility predictor gives us a better VaR-estimate. In fact, the only VaR estimate that manages to pass the Kupiec test is the EWMA T-distribution estimate. However, both methods have their pros and cons. Even though the EWMA methods better manage to follow the market when volatility spikes, it also has a higher variance in estimates, and tends to over-react some times. This gives a higher VaR-estimate than necessary. When volatility is rather constant the historical volatility estimates give a lower VaR without causing too many violations.
+
 We can also see that the choice of volatility model matters a lot more than the underlying assumption of distribution of the loss function. As such, the first step towards making a more reliable estimator would be to find a better predictor of volatility.
 
 \end{document}
