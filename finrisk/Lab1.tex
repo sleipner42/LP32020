@@ -15,27 +15,42 @@
 \author{Kristoffer Nordström, Noah Hansson}
 \date{\today}
 
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}
 
 \begin{document}
 
 \maketitle
 
 \section{Introduction}
-The purpose of this exercise \ref{var1}
+The purpose of this exercise is to implement and evaluate different methods to estimate Value-at-Risk. The data used in the exercise consist of price observations for a given US-stock market portfolio observed between 2006 - 2008. Value at risk is estimated and evaluated for 2008. The different methods is then compared.
 
 \section{Empirical Results}
+The exercise was solved by using Excel and the plots was made with the help of python.
 
-\begin{figure}
+\begin{figure}[h]
     \includegraphics[width=\textwidth]{VaR1.png}
     \caption{Observed loss compared to $VaR_{99\%}$ estimates based on historical volatility}
     \label{var1}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
     \includegraphics[width=\textwidth]{VaR2.png}
     \caption{Observed loss compared to $VaR_{99\%}$ estimates based on EWMA volatility predictions}
     \label{var2}
 \end{figure}
+
+\begin{table}[htbp]
+	\centering
+    \caption{VarTable}
+    \vspace{0.2cm}
+    \begin{tabular}{|m{1.8cm}|*6{m{1.1cm}|}}
+        \hline
+		& Regular & Regular EWMA & Normal & Normal EWMA & T-Dist & T-Dist EWMA \\ \hline
+		Number Of Violations & 22 & 7 & 30 & 7 & 26 & 6 \\\hline
+	\end{tabular}
+\end{table}
+
 
 \section{Conclusion}
 As seen when comparing figure \ref{var1} and figure \ref{var2}, using an EWMA volatility predictor gives us a better VaR-estimate. In fact, the only VaR estimate that manages to pass the Kupiec test is the EWMA T-distribution estimate. However, both methods have their pros and cons. Even though the EWMA methods better manage to follow the market when volatility spikes, it also has a higher variance in estimates, and tends to over-react some times. This gives a higher VaR-estimate than necessary. When volatility is rather constant the historical volatility estimates give a lower VaR without causing too many violations. \newline
