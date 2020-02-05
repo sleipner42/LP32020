@@ -84,13 +84,14 @@ All data and calculations are handled in Microsoft Excel, and the plots are gene
     \end{tabular}    
 \end{table}
  
-\begin{figure}[H]
+\begin{figure}[h]
     \includegraphics[width=\textwidth]{plot.png}
     \caption{VaR (Orange) and ES (Green) compared to Loss (Blue) for each}
     \label{var2}
 \end{figure}
 
 \section{Conclusion}
-When looking at the plotted VaR and ES we can see that the same conclusions that could be made for VaR in computer exercise 1 can be made for ES in this exercise. That is, the underlying assumptions of the loss distribution are not as important as finding a good way to describe the volatility of the asset. 
+The only method that passed the 95\% confidence interval for estimating VaR in Exercise 1 was the T-EWMA-method. The same method scored green both when estimating ES and VaR in this exercise. The N-EWMA scored green on estimating the VaR between 2013-2015 and was just outside the confidence interval in the first exercise. 
 
+When looking at the plotted VaR and ES we can see that the same conclusions that could be made for VaR in computer exercise 1 can be made for ES in this exercise. That is, the underlying assumptions of the loss distribution are not as important as finding a good way to describe the volatility of the asset. 
 \end{document}
