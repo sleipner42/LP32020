@@ -3,6 +3,11 @@
 \usepackage[T1]{fontenc}	
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\rhead{Home Assignment 1}
+\lhead{Noah Hansson \& Kristoffer Nordström}
 
 \begin{document}
  
@@ -11,38 +16,27 @@
 \subsection*{a)}
 We are intrested in finding the conditional distribution function of a stochastic variable $X$ given that $X$ is within a given interval, i.e $F_{X|X\in I}(x)$, where I is the closed interval $I = [a,b]$. Using the law of total probability we can express this as
 \begin{equation}
-    F_{X|\in{I}}(x) = \frac{\int_a^xf_X(x)dx}{c} = \frac{\int_a^xf_X(x)dx}{\int_a^bf_X(x)dx} = \frac{F_X(x)-F_X(a)}{F_X(b)-F_X(a)}
+    F_{X|X\in{I}}(x) = \frac{\int_a^xf_X(x)dx}{c} = \frac{\int_a^xf_X(x)dx}{\int_a^bf_X(x)dx} = \frac{F_X(x)-F_X(a)}{F_X(b)-F_X(a)}
 \end{equation}
 From this we can easily compute the conditional probability density function
 \begin{equation}
-    f_{X|\in{I}}(x) = \frac{dF_{X|\in{I}}(x)}{dx} = \frac{f_X(x)}{F_X(b)-F_X(a)}
+    f_{X|X\in{I}}(x) = \frac{dF_{X|X\in{I}}(x)}{dx} = \frac{f_X(x)}{F_X(b)-F_X(a)}
 \end{equation}
 
 \subsection*{b)}
-The inverse to the conditional distribution function can be found by expressing it as a composition of functions and finding the inverse of the composition.
+By the definition of an inverse distribution we want to find a probability distribution function $F_{X|X \in I}^{-1}(u)$ such as:
 \begin{equation}
-    F_{X|\in{I}}(x) = (f \circ g)(x) = \frac{F_X(x)-F_X(a)}{F_X(b)-F_X(a)}
+    F_{X|X \in I}(F_{X|X \in I}^{-1}(u)) = u
 \end{equation}
-where
+where $u$ is a variable sampled from a uniform distribution $u \sim U[0,1]$. Inserting our expression for $F_{X|X \in I}(x)$ gives us
 \begin{equation}
-    g(x) = F_X(x) - F_X(a)
+    \frac{F_X(F_{X|X\in I}^{-1}(u))-F_X(a)}{F_X(b)-F_X(a)} = u
 \end{equation}
-and
+Solving for $F_{X|X\in I}^{-1}(x)$ gives us
 \begin{equation}
-    f(x) = \frac{x}{F_X(b) - F_X(a)}
+    F_{X|X\in I}^{-1}(u) = F_X^{-1}((F_X(b)-F_X(a))u + F_X(a))
 \end{equation}
-which gives the inverse
-\begin{equation}
-    F_{X|\in{I}}^{-1}(x) = (g^{-1} \circ f^{-1})(x) = F_X^{-1}((F_X(b)- F_X(a))x + F_X(a))
-\end{equation}
-Since the inverse of a probability distribution function is only defined for $x \in [0,1]$ we can then generate samples from the conditional distribution $ F_{X|\in{I}}(x)$ by sampling uniform samples $U[0,1]$ and run them through the inverse distribution $F_{X|\in{I}}^{-1}(x)$.
 
-\subsection*{b2)}
-Since we can sample from $F_X$ by generating uniform samples $U[0,1]$ and running them through the filter $F_X^{-1}$, we can express the condition $X \in I$ as the condition that $U \in [F_X(a), F_X(b)]$. This means that we can sample from $F_{X|\in{I}}(x)$ by scaling and shifting $U$ as $(F_X(b) - F_X(a)U + F_X(a))$. Filtering through $F_X^{-1}$ then gives samples of $F_{X|\in I}(x)$.
-Therefore, $F_{X| \in I}^{-1}$ can be expressed as 
-\begin{equation}
-    F_{X|X\in I}^{-1} = F_X^{-1}((F_X(b) - F_X(a))U + F_X(a))
-\end{equation}
 
 \newpage
 \section*{Power Production of a Wind Turbine}
@@ -82,12 +76,33 @@ For each month we then get the following 95\% confidence intervals of the estima
 \subsection*{b) Importance Sampling}
 To reduce the variance of the Monte-Carlo estimate we will here apply the importance sampling method. When we generate random wind samples we sometimes get samples of wind speed that give us a power production of zero. These samples give do not help finding a better estimate of the average power, as they only increase the variance of the estimator. Instead, we try to find an instrumental density g where we then draw our wind samples from. This reduces the amount of "bad" samples and reduces the variance of the estimator. \noindent To find an estimate of the average power production we use the following calculations, where the density $g(x)$ is a density such as $g(x) = 0 \rightarrow \phi(x)f(x) = 0$
 \begin{equation}
-    \tau = \mathbb{E}_f(\phi(X)) = 
+    \begin{gathered}
+        \tau = \mathbb{E}_f(\phi(X)) = \int_{|\phi(x)|f(x)>0}\phi(x)f(x)dx = \int_{g(x)>0}\phi(x)\frac{f(x)}{g(x)}g(x)dx = \\
+        = \mathbb{E}_g[\phi(x)\frac{f(x)}{g(x)}] = \mathbb{E}_g[\phi(X)\omega(X)]
+    \end{gathered}
 \end{equation}
+where
+\begin{equation}
+    \omega : \{x \in X : g(x)>0 \} \ni x \rightarrow \frac{f(x)}{g(x)}
+\end{equation}
+In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)$ and has a support that includes the whole support of $f(x)\phi(x)$. We then fine tune $g(x)$ such that the function $\phi(x)\omega(x)$ is close to constant in the support of $g(x)$. We can then estimate $\tau$ as $$\tau = \mathbb{E}_g[\phi(X)\omega(X)]$$ and $$\mathbb{V}[\tau_N] = \frac{1}{N}\mathbb{V}_g[\phi(X)\omega(X)]$$
 
 \subsection*{c) Antithetic sampling}
+Another method of reducing the variance is to use antithetic sampling to estimate $\tau = \mathbb{E}_f[\phi (X)]$ by defining the variable $V \overset{\mathrm{def}}{=} \phi (X)$ so that $\tau = \mathbb{E}[V]$. Then we find another variable $V^\prime$ with the same mean and distribution as $V$, but with a negative covariance. Then, if we define $$W \overset{\mathrm{def}}{=} \frac{V + V^\prime}{2}$$ it holds that $\mathbb{E}[W] = \tau$ and $$\mathbb{V}[W] = \frac{1}{2}(\mathbb{V}[V] + \mathbb{C}[V, V^\prime])$$Since the covariance between $V$ and $V^\prime$ is negative we should be able to find an estimate of $\tau$ with a lower variance than when using crude Monte Carlo.
+
+In this case, we find $V$ and $V^\prime$ by evaluating the power fuction $P(V)$ of sampled wind using the inverse conditional weibull distribution. This gives us
+\begin{equation}
+    V = P(F_{X|X\in I}^{-1}(u))
+\end{equation}
+and
+\begin{equation}
+    V^\prime = P(F_{X|X\in I}^{-1}(1-u))
+\end{equation}
+
+This gives us two identically distributed wind samples with negative covariance. This results in lower variance estimates of $\tau$ than importance sampling. The results are presented in table XXXX
 
 
+\newpage
 \section*{Power production of two wind turbines}
 
 \subsection*{a)}
