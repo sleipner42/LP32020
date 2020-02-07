@@ -50,17 +50,17 @@ All data and calculations are handled in Microsoft Excel, and the plots are gene
 
 \begin{table}[H]
     \centering
-    \caption{The different models and Z-tests}
+    \caption{ES performance measured in Z-test and Traffic Light results}
     \vspace{0.2cm}
     \begin{tabular}{lrrr}
         \toprule
-                Model &  Z (test stat.) & Accept/Reject & Result ES traffic light system \\
+                Model &  Z (test stat.) & Accept/Reject & Traffic Light \\
         \midrule
-                ES-N &       -1.742215 &        Reject &                         Yellow \\
-            ES\_N\_EWMA &       -0.727824 &        Reject &                         Yellow \\
-                ES-t &       -1.203534 &        Reject &                         Yellow \\
-            ES-t-EWMA &       -0.628559 &        Accept &                          Green \\
-            ES-BHS &       -1.000707 &        Reject &                         Yellow \\
+                Normal &       -1.742215 &        Reject &                         Yellow \\
+            Normal-EWMA &       -0.727824 &        Reject &                         Yellow \\
+                T-dist &       -1.203534 &        Reject &                         Yellow \\
+            T-dist-EWMA &       -0.628559 &        Accept &                          Green \\
+            BHS &       -1.000707 &        Reject &                         Yellow \\
         \bottomrule
     \end{tabular} 
 \end{table}
@@ -69,24 +69,24 @@ All data and calculations are handled in Microsoft Excel, and the plots are gene
 
 \begin{table}[H]
     \centering
-    \caption{The different models and number of VaR violations}
+    \caption{VaR performance measured in number of violations and Traffic Light results}
     \vspace{0.2cm}
     \begin{tabular}{lrr}
         \toprule
-              Model &  Number over VaR & Results VaR traffic light system \\
+              Model &  VaR Violations & Traffic Light \\
         \midrule
-              VaR-N &               14 &                           Yellow \\
-         VaR-N-EWMA &                9 &                            Green \\
-              VaR-t &               11 &                           Yellow \\
-         VaR-t-EWMA &                9 &                            Green \\
-            VaR-BHS &               11 &                           Yellow \\
+              Normal &               14 &                           Yellow \\
+         Normal-EWMA &                9 &                            Green \\
+              T-dist &               11 &                           Yellow \\
+         T-dist-EWMA &                9 &                            Green \\
+            BHS &               11 &                           Yellow \\
         \bottomrule
     \end{tabular}    
 \end{table}
  
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{plot.png}
-    \caption{VaR (Orange) and ES (Green) compared to Loss (Blue) for each}
+    \caption{$VaR_{97.5\%}$ (Orange) and $ES_{97.5\%}$ (Green) compared to Loss (Blue) for each day during the test period}
     \label{var2}
 \end{figure}
 

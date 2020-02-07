@@ -32,7 +32,7 @@ The purpose of this exercise is to implement and evaluate different methods of e
 \section{Method}
 In this exercise three different methods of estimating VaR will be used. On top of that, the volatility of the observed losses will be estimated in two different ways. This results in 6 different VaR estimates. To test the reliability of the models the number of violations will be compared to the Kupiec test, giving a 95\% confidence interval of expected violations.
    
-The VaR is estimated by using the 99\% percentile of the observed losses. For the regular estimate this is done using Microsoft Excel's percentile\footnote{PERCENTILE.INC()} function. Furthermore, the VaR is also estimated by assuming that the observed losses follows a normal distribution and a T-distribution and then finding the corresponding 99\% percentile.
+The VaR is estimated by using the 99\% percentile of the observed losses. For the basic historical simulation (BHS) this is done using Microsoft Excel's percentile\footnote{PERCENTILE.INC()} function. Furthermore, the VaR is also estimated by assuming that the observed losses follows a normal distribution and a T-distribution and then finding the corresponding 99\% percentile.
 
 The first way of modeling volatility will be based on an average standard deviation of historical measurements, by using a 500 days moving average of the volatility of measured losses. The second way of measuring will be based on an EWMA conditional volatility approximation of the GARCH-model to give a one-step prediction of volatility.
 
@@ -73,7 +73,7 @@ The exercise is solved in the provided Excel sheet, and the plots are made in py
         \hline
         Volatility model & \multicolumn{3}{c|}{Moving Average} & \multicolumn{3}{c|}{EWMA} \\ 
         \hline
-        Loss distribution & Excel & Normal dist & T-dist & Excel & Normal dist & T-Dist\\
+        Loss distribution & BHS & Normal dist & T-dist & BHS & Normal dist & T-Dist\\
         \hline
 		Number Of Violations & 22 & 30 & 26 & 7 & 7 & 6 \\\hline
 	\end{tabular}
