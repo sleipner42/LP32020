@@ -288,7 +288,7 @@ This is done in the same way as in section 2b). The results are presented in tab
 \end{table}
 
 \subsection*{f) Availability and Capacity factor}
-
+We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production by the maximum power production as in section 2e. The availability factor is then calculated as in section 2d. We then find the yearly average of these metrics.
 
 \newpage
 \section*{Power production of two wind turbines}
@@ -316,6 +316,8 @@ To find the covariance of the power production we can use the calculation
      \mathbb{C}[P(V_1), P(V_2)] = \mathbb{E}[P(V_1)P(V_2)] - \mathbb{E}[P(V_1)]\mathbb{E}[P(V_2)]
 \end{equation}
 Since we already know the expected power production of one wind turbine we now only need to find the expectation of the product of the power production. Since the power production is identically distributed for both turbines we can instead find the expectation of the squared power production. Here we will use importance sampling to find an accurate estimate. The results are presented in table \ref{Covresults}.
+
+\\
 
 
 
