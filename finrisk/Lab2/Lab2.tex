@@ -33,7 +33,7 @@
 In this computer exercise the aim is to implement, evaluate and compare different methods for estimating the Expected Shortfall\footnote{Henceforth referred to as ES} for the US stock market index SP500.
 
 \section{Method}
-The data used for this exercise is the daily recorded returns of the SP500 market index during the years 2013 - 2015. The returns are then converted to losses by assuming that we hold a portfolio of \$1000 each day. We will then use this data to evaluate Value-at-Risk\footnote{Henceforth referred to as VaR}, and then the ES, using different assumptions and implementations. The ES will be tested using the Acerbi \& Szekely Z-test statistic. The VaR and ES will estimated in five different ways:
+The data used for this exercise is the daily recorded returns of the SP500 market index during the years 2013 - 2015. The returns are then converted to losses by assuming that we hold a portfolio of \$1000 each day. We will then use this data to evaluate Value-at-Risk\footnote{Henceforth referred to as VaR}, and then the ES, using different assumptions and implementations. The ES estimate will be accepted or rejected using the Acerbi \& Szekely Z-test statistic with a 95\% confidence level as well as a Basel-type traffic light system. The Trafic light system will also be used to evaluate the VaR estimates. The VaR and ES will estimated in five different ways:
 \begin{itemize}
     \item Normal
     \item Normal-EWMA
@@ -41,13 +41,11 @@ The data used for this exercise is the daily recorded returns of the SP500 marke
     \item T-dist EWMA
     \item Basic Historical Simulation
 \end{itemize}
-Through the whole computer exercise the certainty level for VaR and ES will be 97.5\%. Finally, we implement a Basel-type traffic light system for underestimation to classify the different estimation methods.
+Through the whole computer exercise the certainty level for VaR and ES will be 97.5\%. 
 
 All data and calculations are handled in Microsoft Excel, and the plots are generated in Python.
 
 \section{Results}
-
-
 \begin{table}[H]
     \centering
     \caption{ES performance measured in Z-test and Traffic Light results}
@@ -91,7 +89,7 @@ All data and calculations are handled in Microsoft Excel, and the plots are gene
 \end{figure}
 
 \section{Conclusion}
-The only method that passed the 95\% confidence interval for estimating VaR in Exercise 1 was the T-EWMA-method. The same method scored green both when estimating ES and VaR in this exercise. The N-EWMA scored green on estimating the VaR between 2013-2015 and was just outside the confidence interval in the first exercise. 
+The only method that passed the 95\% confidence Kupiec Test for estimating VaR in Exercise 1 was the T-EWMA-method. The same method scored green both when estimating ES and VaR in this exercise. The N-EWMA scored green on estimating the VaR between 2013-2015 and was just outside the confidence interval in the first exercise. 
 
 When looking at the plotted VaR and ES we can see that the same conclusions that could be made for VaR in computer exercise 1 can be made for ES in this exercise. That is, the underlying assumptions of the loss distribution are not as important as finding a good way to describe the volatility of the asset. 
 \end{document}
