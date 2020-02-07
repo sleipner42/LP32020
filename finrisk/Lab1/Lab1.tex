@@ -27,12 +27,12 @@
 \maketitle
 
 \section{Introduction}
-The purpose of this exercise is to implement and evaluate different methods of estimating Value-at-Risk\footnote{Henceforth referred to as VaR} for a given asset. The data used in the exercise consists of price observations for a US-stock market portfolio observed between 2006 - 2008. Value at risk is estimated and evaluated for 2008. Different methods of estiamting VaR will then be compared based on how often the losses exeed the VaR estimate.
+The purpose of this exercise is to implement and evaluate different methods of estimating Value-at-Risk\footnote{Henceforth referred to as VaR} for a given asset. The data used in the exercise consists of price observations for a US-stock market portfolio observed between 2006 - 2008. Value at risk is estimated and evaluated for 2008. Different methods of estimating VaR will then be compared based on how often the losses exceed the VaR estimate.
 
 \section{Method}
-In this excercise three different methods of estimating VaR will be used. On top of that, the volatility of the loss function will be estimated in two different ways. This results in 6 different VaR estimates. To test the reliability of the models the number of violations will be compared to the Kupiec test, giving a 95\% confidence interval of expected violations.
-
-The VaR is estimated by using the 99\% percentile of an assumed loss function. For the regular estimate this is done using Microsoft Excel's percentile\footnote{PERCENTILE.INC()} function. Furthermore, the VaR is also estimated by assuming that the loss function follows a normal dristribution and a T-distribution and then finding the corresponding 99\% percentile.
+In this exercise three different methods of estimating VaR will be used. On top of that, the volatility of the observed losses will be estimated in two different ways. This results in 6 different VaR estimates. To test the reliability of the models the number of violations will be compared to the Kupiec test, giving a 95\% confidence interval of expected violations.
+   
+The VaR is estimated by using the 99\% percentile of the observed losses. For the regular estimate this is done using Microsoft Excel's percentile\footnote{PERCENTILE.INC()} function. Furthermore, the VaR is also estimated by assuming that the observed losses follows a normal distribution and a T-distribution and then finding the corresponding 99\% percentile.
 
 The first way of modeling volatility will be based on an average standard deviation of historical measurements, by using a 500 days moving average of the volatility of measured losses. The second way of measuring will be based on an EWMA conditional volatility approximation of the GARCH-model to give a one-step prediction of volatility.
 
