@@ -13,7 +13,8 @@
 
 \begin{document}
  
-\section*{Random Number Generation}
+\section{Random Number Generation}\label{sec:RNG}
+
 
 \subsection*{a)}
 We are intrested in finding the conditional distribution function of a stochastic variable $X$ given that $X$ is within a given interval, i.e $F_{X|X\in I}(x)$, where I is the closed interval $I = [a,b]$. Using the law of total probability we can express this as
@@ -41,7 +42,8 @@ Solving for $F_{X|X\in I}^{-1}(x)$ gives us
 
 
 \newpage
-\section*{Power Production of a Wind Turbine}
+\section{Power Production of a Wind Turbine}
+\label{sec:oneTurbine}
 
 \subsection*{a) Crude Monte-Carlo sampling}
 To calculate an initial estimate of the power production of the Wind Turbine we start by sampling the power production using regular Monte-Carlo sampling. We begin by generating $10^5$ samples of wind distributed by a Weibull distribution. We then calculate the generated power for each wind sample and then find the average and the variance for each month. The estimate is calculated as follows:
@@ -69,21 +71,23 @@ The results are presented in table \ref{tab:CrudeResults} and the samples for ja
     \includegraphics[width = 1.0\textwidth]{janCrude}
 \end{figure}
 
-\textbf{TRUNCATED VERSION}
+Since we know that the wind turbine produces no power when the wind speed is above 25 m/s or below 3 m/s we can modify our Monte Carlo simulation by truncating our wind samples. Using the results in section \ref{sec:RNG} we can instead generate wind samples within the interval $[3,25]$ m/s to reduce the variance of $\tau$. In order to compensate for the truncation we then multiply the estimates by the probability that the wind speed is within the interval.
 
+The results are presented in table \ref{tab:CrudeResultsTrunc} and the samples for january are plotted in figure \ref{fig:samplesJanTrunc}.
 \begin{table}
     \centering
-    \caption{Crude truncated Monte Carlo estimates and confidence intervals of power production for each month of the year}
-    \label{tab:CrudeTruncatedResults}
+    \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year using truncated wind samples}
+    \label{tab:CrudeResultsTrunc}
     \include{crudeMCtrunc}
 \end{table}
 
 \begin{figure}
     \centering
     \caption{Sampled truncated wind speed (left) and power production (right) for January}
-    \label{fig:samplesTruncJan}
+    \label{fig:samplesJanTrunc}
     \includegraphics[width = 1.0\textwidth]{janCrudeTrunc}
 \end{figure}
+
 
 \subsection*{b) Importance Sampling}
 To reduce the variance of the Monte-Carlo estimate we will here apply the importance sampling method. When we generate random wind samples we sometimes get samples of wind speed that give us a power production of zero. These samples give do not help finding a better estimate of the average power, as they only increase the variance of the estimator. Instead, we try to find an instrumental density g where we then draw our wind samples from. This reduces the amount of "bad" samples and reduces the variance of the estimator. \noindent To find an estimate of the average power production we use the following calculations, where the density $g(x)$ is a density such as $g(x) = 0 \rightarrow \phi(x)f(x) = 0$
@@ -175,10 +179,11 @@ This is done in the same way as in section 2b). The results are presented in tab
 \end{table}
 
 \subsection*{f) Availability and Capacity factor}
-We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production by the maximum power production as in section 2e. The availability factor is then calculated as in section 2d. We then find the yearly average of these metrics.
+We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output of $3.075MW$, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production by the maximum power production as in section 2e. The availability factor is then calculated as in section 2d. We then find the yearly average of these metrics.
 
 \newpage
-\section*{Power production of two wind turbines}
+\section{Power production of two wind turbines}
+\label{sec:twoTurbines}
 
 \subsection*{a)}
 In order to find the expectation of the sum of power production, $\mathbb{E}[P(v_1) + P(v_2)]$ we can simply find the sum of expectations, i.e $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)]$. We then use importance sampling as in section 2b). Using the yearly average parameters of $\lambda = 9.13$ and $k = 1.96$ we find the estimates of the expected power production as presented in table \ref{tab:IS2results}.
