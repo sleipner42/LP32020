@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{fancyhdr}
+\usepackage{booktabs}
 
 \pagestyle{fancy}
 \rhead{Home Assignment 1}
@@ -57,37 +58,10 @@ The results are presented in table \ref{CrudeResults}.
     \centering
     \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{CrudeResults}
-    \begin{tabular}{|c|| c c c ||}
-        \hline
-        Month & $\tau$ & $I_{95\%}$ & $\mathbb{V}[\phi(X)]$ \\
-        \hline\hline
-        Jan & 0 & 0 & 0 \\
-        \hline
-        Feb & 0 & 0 & 0 \\
-        \hline
-        Mar & 0 & 0 & 0 \\
-        \hline
-        Apr & 0 & 0 & 0 \\
-        \hline
-        May & 0 & 0 & 0 \\
-        \hline
-        Jun & 0 & 0 & 0 \\
-        \hline
-        Jul & 0 & 0 & 0 \\
-        \hline
-        Aug & 0 & 0 & 0 \\
-        \hline
-        Sep & 0 & 0 & 0 \\
-        \hline
-        Oct & 0 & 0 & 0 \\
-        \hline
-        Nov & 0 & 0 & 0 \\
-        \hline
-        Dec & 0 & 0 & 0 \\
-        \hline
-
-    \end{tabular}
+    \include{crudeMC}
 \end{table}
+
+\textbf{TRUNCATED VERSION}
 
 \subsection*{b) Importance Sampling}
 To reduce the variance of the Monte-Carlo estimate we will here apply the importance sampling method. When we generate random wind samples we sometimes get samples of wind speed that give us a power production of zero. These samples give do not help finding a better estimate of the average power, as they only increase the variance of the estimator. Instead, we try to find an instrumental density g where we then draw our wind samples from. This reduces the amount of "bad" samples and reduces the variance of the estimator. \noindent To find an estimate of the average power production we use the following calculations, where the density $g(x)$ is a density such as $g(x) = 0 \rightarrow \phi(x)f(x) = 0$
@@ -116,36 +90,7 @@ In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{ISresults}
-    \begin{tabular}{|c|| c c c ||}
-        \hline
-        Month & $\tau$ & $I_{95\%}$ & $\mathbb{V}[\phi(X)]$ \\
-        \hline\hline
-        Jan & 0 & 0 & 0 \\
-        \hline
-        Feb & 0 & 0 & 0 \\
-        \hline
-        Mar & 0 & 0 & 0 \\
-        \hline
-        Apr & 0 & 0 & 0 \\
-        \hline
-        May & 0 & 0 & 0 \\
-        \hline
-        Jun & 0 & 0 & 0 \\
-        \hline
-        Jul & 0 & 0 & 0 \\
-        \hline
-        Aug & 0 & 0 & 0 \\
-        \hline
-        Sep & 0 & 0 & 0 \\
-        \hline
-        Oct & 0 & 0 & 0 \\
-        \hline
-        Nov & 0 & 0 & 0 \\
-        \hline
-        Dec & 0 & 0 & 0 \\
-        \hline
-
-    \end{tabular}
+    \include{ISMC}
 \end{table}
 
 \subsection*{c) Antithetic sampling}
@@ -166,36 +111,7 @@ Generating $10^5$ samples of $u$ and running each sample through both inverse di
     \centering
     \caption{Antithetic Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{ATresults}
-    \begin{tabular}{|c|| c c c ||}
-        \hline
-        Month & $\tau$ & $I_{95\%}$ & $\mathbb{V}[\phi(X)]$ \\
-        \hline\hline
-        Jan & 0 & 0 & 0 \\
-        \hline
-        Feb & 0 & 0 & 0 \\
-        \hline
-        Mar & 0 & 0 & 0 \\
-        \hline
-        Apr & 0 & 0 & 0 \\
-        \hline
-        May & 0 & 0 & 0 \\
-        \hline
-        Jun & 0 & 0 & 0 \\
-        \hline
-        Jul & 0 & 0 & 0 \\
-        \hline
-        Aug & 0 & 0 & 0 \\
-        \hline
-        Sep & 0 & 0 & 0 \\
-        \hline
-        Oct & 0 & 0 & 0 \\
-        \hline
-        Nov & 0 & 0 & 0 \\
-        \hline
-        Dec & 0 & 0 & 0 \\
-        \hline
-
-    \end{tabular}
+    \include{ATSMC}
 \end{table}
 
 \subsection*{d) Probability of power production}
@@ -209,36 +125,7 @@ The probability for each year is presented in table \ref{powerprob}.
     \centering
     \caption{Probability of a wind turbine producing power for each month of the year}
     \label{powerprob}
-    \begin{tabular}{|c|| c ||}
-        \hline
-        Month & $\mathbb{P}(P(V) > 0)$\\
-        \hline\hline
-        Jan & 0 \\
-        \hline
-        Feb & 0 \\
-        \hline
-        Mar & 0 \\
-        \hline
-        Apr & 0 \\
-        \hline
-        May & 0 \\
-        \hline
-        Jun & 0 \\
-        \hline
-        Jul & 0 \\
-        \hline
-        Aug & 0 \\
-        \hline
-        Sep & 0 \\
-        \hline
-        Oct & 0 \\
-        \hline
-        Nov & 0 \\
-        \hline
-        Dec & 0 \\
-        \hline
-
-    \end{tabular}
+    \include{powerProb}
 \end{table}
 
 \subsection*{e) Average power coefficient}
@@ -316,10 +203,6 @@ To find the covariance of the power production we can use the calculation
      \mathbb{C}[P(V_1), P(V_2)] = \mathbb{E}[P(V_1)P(V_2)] - \mathbb{E}[P(V_1)]\mathbb{E}[P(V_2)]
 \end{equation}
 Since we already know the expected power production of one wind turbine we now only need to find the expectation of the product of the power production. Since the power production is identically distributed for both turbines we can instead find the expectation of the squared power production. Here we will use importance sampling to find an accurate estimate. The results are presented in table \ref{Covresults}.
-
-\\
-
-
 
 \begin{table}
     \centering
