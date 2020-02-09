@@ -6,16 +6,27 @@
 \usepackage{fancyhdr}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{float}
 
 \pagestyle{fancy}
 \rhead{Home Assignment 1}
 \lhead{Noah Hansson \& Kristoffer Nordström}
 
+\title{Home Assignment 1 - FMSN50}
+\author{Kristoffer Nordström, Noah Hansson}\author{Kristoffer Nordström \\ kr8245no-s@student.lu.se \and  Noah Hansson \\ no3822ha-s@student.lu.se}
+\date{\today}
+
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}
+\setlength{\floatsep}{6pt plus 1.0pt minus 2.0pt}
+\setlength{\textfloatsep}{10pt plus 1.0pt minus 2.0pt}
+
 \begin{document}
+\maketitle
+\newpage
+
  
 \section{Random Number Generation}\label{sec:RNG}
-
-
 \subsection*{a)}
 We are intrested in finding the conditional distribution function of a stochastic variable $X$ given that $X$ is within a given interval, i.e $F_{X|X\in I}(x)$, where I is the closed interval $I = [a,b]$. Using the law of total probability we can express this as
 \begin{equation}
@@ -57,35 +68,35 @@ And since the sample size is large we can also assume that the central limit the
 In this case the stochastic variable $X$ is the wind speed and $\phi(X)$ is the power curve function for the wind turbine.
 
 The results are presented in table \ref{tab:CrudeResults} and the samples for january are plotted in figure \ref{fig:samplesJan}.
-\begin{table}
+\begin{table}[H]
     \centering
     \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{tab:CrudeResults}
     \include{crudeMC}
 \end{table}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
+    \includegraphics[width = 1.0\textwidth]{janCrude}
     \caption{Sampled wind speed (left) and power production (right) for January}
     \label{fig:samplesJan}
-    \includegraphics[width = 1.0\textwidth]{janCrude}
 \end{figure}
 
 Since we know that the wind turbine produces no power when the wind speed is above 25 m/s or below 3 m/s we can modify our Monte Carlo simulation by truncating our wind samples. Using the results in section \ref{sec:RNG} we can instead generate wind samples within the interval $[3,25]$ m/s to reduce the variance of $\tau$. In order to compensate for the truncation we then multiply the estimates by the probability that the wind speed is within the interval.
 
 The results are presented in table \ref{tab:CrudeResultsTrunc} and the samples for january are plotted in figure \ref{fig:samplesJanTrunc}.
-\begin{table}
+\begin{table}[H]
     \centering
+    \include{crudeMCtrunc}
     \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year using truncated wind samples}
     \label{tab:CrudeResultsTrunc}
-    \include{crudeMCtrunc}
 \end{table}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
+    \includegraphics[width = 1.0\textwidth]{janCrudeTrunc}
     \caption{Sampled truncated wind speed (left) and power production (right) for January}
     \label{fig:samplesJanTrunc}
-    \includegraphics[width = 1.0\textwidth]{janCrudeTrunc}
 \end{figure}
 
 
@@ -110,20 +121,20 @@ with the variance
     \mathbb{V}[\tau_N] = \frac{1}{N}\mathbb{V}_g[\phi(X)\omega(X)]
 \end{equation}
 
-In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)$ and has a support that includes the whole support of $f(x)\phi(x)$. We then fine tune $g(x)$ such that the function $\phi(x)\omega(x)$ is close to constant in the support of $g(x)$. We then draw $10^5$ samples from $g(x)$ as the stochastic variable $X$ to estimate $\tau$. The results are presented in table \ref{tab:ISresults}.
+In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)$ and has a support that includes the whole support of $f(x)\phi(x)$. We then fine tune $g(x)$ such that the function $\phi(x)\omega(x)$ is close to constant in the support of $g(x)$. We then draw $10^5$ samples from $g(x)$ as the stochastic variable $X$ to estimate $\tau$. The results are presented in table \ref{tab:ISresults}. In this case we choose $g(x)$ as a normal distribution.
 
-\begin{table}
+\begin{table}[H]
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{tab:ISresults}
     \include{ISMC}
 \end{table}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
+    \includegraphics[width = 1.0\textwidth]{janISMC}
     \caption{$g(x)$ (scale-transformed) and $\phi(x)*f_X(x)$ (left) and $\omega(x)$ (right) for January}
     \label{fig:ISMCjan}
-    \includegraphics[width = 1.0\textwidth]{janISMC}
 \end{figure}
 
 \subsection*{c) Antithetic sampling}
@@ -140,7 +151,7 @@ and
 
 Generating $10^5$ samples of $u$ and running each sample through both inverse distributions before avaluating the power production from those samples gives us the two stochastic variables $V$ and $V^\prime$ This gives us two identically distributed wind samples with negative covariance. The results are presented in table \ref{tab:ATresults}.
 
-\begin{table}
+\begin{table}[H]
     \centering
     \caption{Antithetic Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{tab:ATresults}
@@ -154,7 +165,7 @@ To find the probability of the wind turbine producing power, $\mathbb{P}(P(V) > 
 \end{equation}
 The probability for each year is presented in table \ref{tab:powerprob}.
 
-\begin{table}
+\begin{table}[H]
     \centering
     \caption{Probability of a wind turbine producing power for each month of the year}
     \label{tab:powerprob}
@@ -171,7 +182,7 @@ In practice however, the power production of a wind turbine is much lower. Here 
   \mathbb{E}[\frac{P(V)}{P_{tot}(V)}]
 \end{equation}
 This is done in the same way as in section 2b). The results are presented in table \ref{tab:powercoeff}.
-\begin{table}
+\begin{table}[H]
     \centering
     \caption{Average power ratio for a wind turbine for each month of the year}
     \label{tab:powercoeff}
@@ -179,7 +190,14 @@ This is done in the same way as in section 2b). The results are presented in tab
 \end{table}
 
 \subsection*{f) Availability and Capacity factor}
-We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output of $3.075MW$, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production by the maximum power production as in section 2e. The availability factor is then calculated as in section 2d. We then find the yearly average of these metrics.
+We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output of $3.075MW$, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production by the maximum power production. The availability factor is already calculated in section 2d. The yearly average of these metrics can be found in table %\ref{tab:metrics}.
+
+\begin{table}[H]
+    \centering
+    \caption{Yearly average of capacity factor and availability factor}
+    \label{metrics}
+    %\include{metrics}
+\end{table}
 
 \newpage
 \section{Power production of two wind turbines}
@@ -189,7 +207,7 @@ We now evaluate a metric to be able to evaluate if the power production of the w
 In order to find the expectation of the sum of power production, $\mathbb{E}[P(v_1) + P(v_2)]$ we can simply find the sum of expectations, i.e $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)]$. We then use importance sampling as in section 2b). Using the yearly average parameters of $\lambda = 9.13$ and $k = 1.96$ we find the estimates of the expected power production as presented in table \ref{tab:IS2results}.
 
 
-\begin{table}
+\begin{table}[H]
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of power production for two wind turbines over a whole year}
     \label{tab:IS2results}
@@ -209,7 +227,7 @@ To find the covariance of the power production we can use the calculation
 \end{equation}
 Since we already know the expected power production of one wind turbine we now only need to find the expectation of the product of the power production. Since the power production is identically distributed for both turbines we can instead find the expectation of the squared power production. Here we will use importance sampling to find an accurate estimate. The results are presented in table \ref{tab:Covresults}.
 
-\begin{table}
+\begin{table}[H]
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of $\mathbb{E}[P(V_1)P(V_2)]$ and $\mathbb{E}[P(V_1)]$ over a whole year}
     \label{tab:Covresults}
