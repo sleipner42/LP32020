@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{fancyhdr}
 \usepackage{booktabs}
+\usepackage{graphicx}
 
 \pagestyle{fancy}
 \rhead{Home Assignment 1}
@@ -53,15 +54,36 @@ And since the sample size is large we can also assume that the central limit the
 \end{equation}
 In this case the stochastic variable $X$ is the wind speed and $\phi(X)$ is the power curve function for the wind turbine.
 
-The results are presented in table \ref{CrudeResults}.
+The results are presented in table \ref{tab:CrudeResults} and the samples for january are plotted in figure \ref{fig:samplesJan}.
 \begin{table}
     \centering
     \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year}
-    \label{CrudeResults}
+    \label{tab:CrudeResults}
     \include{crudeMC}
 \end{table}
 
+\begin{figure}
+    \centering
+    \caption{Sampled wind speed (left) and power production (right) for January}
+    \label{fig:samplesJan}
+    \includegraphics[width = 1.0\textwidth]{janCrude}
+\end{figure}
+
 \textbf{TRUNCATED VERSION}
+
+\begin{table}
+    \centering
+    \caption{Crude truncated Monte Carlo estimates and confidence intervals of power production for each month of the year}
+    \label{tab:CrudeTruncatedResults}
+    \include{crudeMCtrunc}
+\end{table}
+
+\begin{figure}
+    \centering
+    \caption{Sampled truncated wind speed (left) and power production (right) for January}
+    \label{fig:samplesTruncJan}
+    \includegraphics[width = 1.0\textwidth]{janCrudeTrunc}
+\end{figure}
 
 \subsection*{b) Importance Sampling}
 To reduce the variance of the Monte-Carlo estimate we will here apply the importance sampling method. When we generate random wind samples we sometimes get samples of wind speed that give us a power production of zero. These samples give do not help finding a better estimate of the average power, as they only increase the variance of the estimator. Instead, we try to find an instrumental density g where we then draw our wind samples from. This reduces the amount of "bad" samples and reduces the variance of the estimator. \noindent To find an estimate of the average power production we use the following calculations, where the density $g(x)$ is a density such as $g(x) = 0 \rightarrow \phi(x)f(x) = 0$
@@ -84,14 +106,21 @@ with the variance
     \mathbb{V}[\tau_N] = \frac{1}{N}\mathbb{V}_g[\phi(X)\omega(X)]
 \end{equation}
 
-In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)$ and has a support that includes the whole support of $f(x)\phi(x)$. We then fine tune $g(x)$ such that the function $\phi(x)\omega(x)$ is close to constant in the support of $g(x)$. We then draw $10^5$ samples from $g(x)$ as the stochastic variable $X$ to estimate $\tau$. The results are presented in table \ref{ISresults}.
+In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)$ and has a support that includes the whole support of $f(x)\phi(x)$. We then fine tune $g(x)$ such that the function $\phi(x)\omega(x)$ is close to constant in the support of $g(x)$. We then draw $10^5$ samples from $g(x)$ as the stochastic variable $X$ to estimate $\tau$. The results are presented in table \ref{tab:ISresults}.
 
 \begin{table}
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of power production for each month of the year}
-    \label{ISresults}
+    \label{tab:ISresults}
     \include{ISMC}
 \end{table}
+
+\begin{figure}
+    \centering
+    \caption{$g(x)$ (scale-transformed) and $\phi(x)*f_X(x)$ (left) and $\omega(x)$ (right) for January}
+    \label{fig:ISMCjan}
+    \includegraphics[width = 1.0\textwidth]{janISMC}
+\end{figure}
 
 \subsection*{c) Antithetic sampling}
 Another method of reducing the variance is to use antithetic sampling to estimate $\tau = \mathbb{E}_f[\phi (X)]$ by defining the variable $V \overset{\mathrm{def}}{=} \phi (X)$ so that $\tau = \mathbb{E}[V]$. Then we find another variable $V^\prime$ with the same mean and distribution as $V$, but with a negative covariance. Then, if we define $$W \overset{\mathrm{def}}{=} \frac{V + V^\prime}{2}$$ it holds that $\mathbb{E}[W] = \tau$ and $$\mathbb{V}[W] = \frac{1}{2}(\mathbb{V}[V] + \mathbb{C}[V, V^\prime])$$Since the covariance between $V$ and $V^\prime$ is negative we should be able to find an estimate of $\tau$ with a lower variance than when using crude Monte Carlo.
@@ -105,12 +134,12 @@ and
     V^\prime = P(F_{X|X\in I}^{-1}(1-u))
 \end{equation}
 
-Generating $10^5$ samples of $u$ and running each sample through both inverse distributions before avaluating the power production from those samples gives us the two stochastic variables $V$ and $V^\prime$ This gives us two identically distributed wind samples with negative covariance. The results are presented in table \ref{ATresults}.
+Generating $10^5$ samples of $u$ and running each sample through both inverse distributions before avaluating the power production from those samples gives us the two stochastic variables $V$ and $V^\prime$ This gives us two identically distributed wind samples with negative covariance. The results are presented in table \ref{tab:ATresults}.
 
 \begin{table}
     \centering
     \caption{Antithetic Monte Carlo estimates and confidence intervals of power production for each month of the year}
-    \label{ATresults}
+    \label{tab:ATresults}
     \include{ATSMC}
 \end{table}
 
@@ -119,12 +148,12 @@ To find the probability of the wind turbine producing power, $\mathbb{P}(P(V) > 
 \begin{equation}
     \mathbb{P}(P(V) > 0) = \mathbb{P}(V > 3, V < 25) = F_X(25) - F_X(3)
 \end{equation}
-The probability for each year is presented in table \ref{powerprob}.
+The probability for each year is presented in table \ref{tab:powerprob}.
 
 \begin{table}
     \centering
     \caption{Probability of a wind turbine producing power for each month of the year}
-    \label{powerprob}
+    \label{tab:powerprob}
     \include{powerProb}
 \end{table}
 
@@ -137,41 +166,12 @@ In practice however, the power production of a wind turbine is much lower. Here 
 \begin{equation}
   \mathbb{E}[\frac{P(V)}{P_{tot}(V)}]
 \end{equation}
-This is done in the same way as in section 2b). The results are presented in table \ref{powercoeff}.
+This is done in the same way as in section 2b). The results are presented in table \ref{tab:powercoeff}.
 \begin{table}
     \centering
-    \caption{Probability of a wind turbine producing power for each month of the year}
-    \label{powercoeff}
-    \begin{tabular}{|c|| c c ||}
-        \hline
-        Month & Power coefficient & $I_{95\%}$ \\
-        \hline
-        Jan & 0 &\\
-        \hline
-        Feb & 0 &\\
-        \hline
-        Mar & 0 &\\
-        \hline
-        Apr & 0 &\\
-        \hline
-        May & 0 &\\
-        \hline
-        Jun & 0 &\\
-        \hline
-        Jul & 0 &\\
-        \hline
-        Aug & 0 &\\
-        \hline
-        Sep & 0 &\\
-        \hline
-        Oct & 0 &\\
-        \hline
-        Nov & 0 &\\
-        \hline
-        Dec & 0 &\\
-        \hline
-
-    \end{tabular}
+    \caption{Average power ratio for a wind turbine for each month of the year}
+    \label{tab:powercoeff}
+    \include{powerRatio}
 \end{table}
 
 \subsection*{f) Availability and Capacity factor}
@@ -181,13 +181,13 @@ We now evaluate a metric to be able to evaluate if the power production of the w
 \section*{Power production of two wind turbines}
 
 \subsection*{a)}
-In order to find the expectation of the sum of power production, $\mathbb{E}[P(v_1) + P(v_2)]$ we can simply find the sum of expectations, i.e $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)]$. We then use importance sampling as in section 2b). Using the yearly average parameters of $\lambda = 9.13$ and $k = 1.96$ we find the estimates of the expected power production as presented in table \ref{IS2results}.
+In order to find the expectation of the sum of power production, $\mathbb{E}[P(v_1) + P(v_2)]$ we can simply find the sum of expectations, i.e $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)]$. We then use importance sampling as in section 2b). Using the yearly average parameters of $\lambda = 9.13$ and $k = 1.96$ we find the estimates of the expected power production as presented in table \ref{tab:IS2results}.
 
 
 \begin{table}
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of power production for two wind turbines over a whole year}
-    \label{IS2results}
+    \label{tab:IS2results}
     \begin{tabular}{| c c c ||}
         \hline
         $\tau$ & $I_{95\%}$ & $\mathbb{V}$ \\
@@ -202,12 +202,12 @@ To find the covariance of the power production we can use the calculation
 \begin{equation}
      \mathbb{C}[P(V_1), P(V_2)] = \mathbb{E}[P(V_1)P(V_2)] - \mathbb{E}[P(V_1)]\mathbb{E}[P(V_2)]
 \end{equation}
-Since we already know the expected power production of one wind turbine we now only need to find the expectation of the product of the power production. Since the power production is identically distributed for both turbines we can instead find the expectation of the squared power production. Here we will use importance sampling to find an accurate estimate. The results are presented in table \ref{Covresults}.
+Since we already know the expected power production of one wind turbine we now only need to find the expectation of the product of the power production. Since the power production is identically distributed for both turbines we can instead find the expectation of the squared power production. Here we will use importance sampling to find an accurate estimate. The results are presented in table \ref{tab:Covresults}.
 
 \begin{table}
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of $\mathbb{E}[P(V_1)P(V_2)]$ and $\mathbb{E}[P(V_1)]$ over a whole year}
-    \label{Covresults}
+    \label{tab:Covresults}
     \begin{tabular}{|c|| c c c ||}
         \hline
         & $\tau$ & $I_{95\%}$ & $\mathbb{V}$ \\
