@@ -212,49 +212,50 @@ We now evaluate a metric to be able to evaluate if the power production of the w
 \label{sec:twoTurbines}
 
 \subsection*{a)}
-In order to find the expectation of the sum of power production, $\mathbb{E}[P(v_1) + P(v_2)]$ we can simply find the sum of expectations, i.e $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)]$. We then use importance sampling as in section 2b). Using the yearly average parameters of $\lambda = 9.13$ and $k = 1.96$ we find the estimates of the expected power production as presented in table \ref{tab:IS2results}.
-
-
-\begin{table}[H]
-    \centering
-    \caption{Importance Sampling Monte Carlo estimates and confidence intervals of power production for two wind turbines over a whole year}
-    \label{tab:IS2results}
-    \begin{tabular}{| c c c ||}
-        \hline
-        $\tau$ & $I_{95\%}$ & $\mathbb{V}$ \\
-        \hline\hline
-        0 & 0 & 0 \\
-        \hline
-    \end{tabular}
-\end{table}
+In order to find the expectation of the sum of power production, $\mathbb{E}[P(v_1) + P(v_2)]$ we can simply find the sum of expectations, i.e $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)]$. Since $v_1$ and $v_2$ are identically distributed we can approximate the sum of expectations as $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)] = 2\mathbb{E}[P(V_1)]$, which then is reduced to a one-dimensional problem. Therefore, we use importance sampling as in section 2b) to find an estimate. Using the yearly average parameters of $\lambda = 9.13$ and $k = 1.96$ we find the estimates of the expected power production as presented in table \ref{tab:multivarRes}.
 
 \subsection*{b)}
 To find the covariance of the power production we can use the calculation
 \begin{equation}
      \mathbb{C}[P(V_1), P(V_2)] = \mathbb{E}[P(V_1)P(V_2)] - \mathbb{E}[P(V_1)]\mathbb{E}[P(V_2)]
 \end{equation}
-Since we already know the expected power production of one wind turbine we now only need to find the expectation of the product of the power production. Since the power production is identically distributed for both turbines we can instead find the expectation of the squared power production. Here we will use importance sampling to find an accurate estimate. The results are presented in table \ref{tab:Covresults}.
+Since we already know the expected power production of one wind turbine from section 3a, we now only need to find the expectation of the product of the power production. Since the power production is identically distributed for both turbines we can instead find the expectation of the squared power production. Here we will use importance sampling to find an accurate estimate. Since this problem can not be reduced to a one dimensional problem as in 3a we now need to use a two-dimensional importance sampling approach. This gives us the following functions to sample from:
+\begin{equation}
+    \phi(V_1, V_2) = P(V_1)P(V_2)
+\end{equation}
 
-\begin{table}[H]
+\begin{equation}
+    f_V(v_1, v_2) = f_V(v_1)f_V(v_2)[1 + \alpha(1-F_V(v_1)^p)^{q-1}(1-F_V(v_2)^p)^{q-1}(F_V(v_1)^p(1+pq)-1)(F_V(v_2)^p(1+pq)-1)]
+\end{equation}
+
+For the importance sampling distribution we set $g(v_1, v_2)$ as a bivariate normal distribution with a mean of $[12,12]$ and a covariance matrix of 
+$\begin{pmatrix} 
+    10 & 2 \\ 
+    2 & 10 
+\end{pmatrix}$. This is visualised in figure \ref{fig:mtBruno}
+
+\begin{figure}[H]
     \centering
-    \caption{Importance Sampling Monte Carlo estimates and confidence intervals of $\mathbb{E}[P(V_1)P(V_2)]$ and $\mathbb{E}[P(V_1)]$ over a whole year}
-    \label{tab:Covresults}
-    \begin{tabular}{|c|| c c c ||}
-        \hline
-        & $\tau$ & $I_{95\%}$ & $\mathbb{V}$ \\
-        \hline\hline
-        $\mathbb{E}[P(V_1)P(V_2)]$ & 0 & 0 & 0 \\
-        \hline
-        $\mathbb{E}[P(V_1)]$ & 0 & 0 & 0 \\
-        \hline
-    \end{tabular}
-\end{table}
+    \includegraphics[width = 1.0\textwidth]{images/mtBruno}
+    \caption{Importance sampling of $\mathbb{E}[P(V_1)P(V_2)]$ using a bivariate normal distribution as $g(x)$}
+    \label{fig:mtBruno}
+\end{figure}
+
+
+The results are presented in table \ref{tab:multivarRes}.
 
 \subsection*{c)}
 The variance of the combined power production can be computed using the following calculations
 \begin{equation}
     \mathbb{V}[P(V_1) + P(V_2)] = \mathbb{V}[P(V_1)] + \mathbb{V}[P(V_1)] + 2\mathbb{C}[P(V_1), P(V_2)]
 \end{equation}
-Since we have already found all these values we simply plug them in to get the a variance of $X$, and a standard deviation of $\sqrt{X}$
+Since we have already found all these values we simply plug them in to find the variance. The result is presented in table \ref{tab:multivarRes}.
+
+\begin{table}[H]
+    \centering
+    \caption{Importance Sampling Monte Carlo estimates of the average power production of two wind turbines over a whole year}
+    \label{tab:multivarRes}
+    \include{tables/multivarRes}
+\end{table}
 
 \end{document}
