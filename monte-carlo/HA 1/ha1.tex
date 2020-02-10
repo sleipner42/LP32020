@@ -87,9 +87,9 @@ Since we know that the wind turbine produces no power when the wind speed is abo
 The results are presented in table \ref{tab:CrudeResultsTrunc} and the samples for january are plotted in figure \ref{fig:samplesJanTrunc}.
 \begin{table}[H]
     \centering
-    \include{tables/crudeMCtrunc}
     \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year using truncated wind samples}
     \label{tab:CrudeResultsTrunc}
+    \include{tables/crudeMCtrunc}
 \end{table}
 
 \begin{figure}[H]
@@ -198,13 +198,13 @@ This is done in the same way as in section 2b), but here we use a weibull distri
 \end{table}
 
 \subsection*{f) Availability and Capacity factor}
-We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output of $3.075MW$, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production obtained in section 2c by the maximum power production. The availability factor is already calculated in section 2d. The yearly average of these metrics can be found in table %\ref{tab:metrics}.
+We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output of $3.075MW$, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production obtained in section 2c by the maximum power production. The availability factor is already calculated in section 2d. The yearly average of these metrics can be found in table \ref{tab:metrics}.
 
 \begin{table}[H]
     \centering
     \caption{Yearly average of capacity factor and availability factor}
-    \label{metrics}
-    %\include{metrics}
+    \label{tab:metrics}
+    \include{tables/Metrics}
 \end{table}
 
 \newpage
