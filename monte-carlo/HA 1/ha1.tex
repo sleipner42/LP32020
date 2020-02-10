@@ -28,11 +28,12 @@
  
 \section{Random Number Generation}\label{sec:RNG}
 \subsection*{a)}
-We are intrested in finding the conditional distribution function of a stochastic variable $X$ given that $X$ is within a given interval, i.e $F_{X|X\in I}(x)$, where I is the closed interval $I = [a,b]$. Using the law of total probability we can express this as
+We are interested in finding the conditional distribution function of a stochastic variable $X$ given that $X$ is within a given interval, i.e $F_{X|X\in I}(x)$, where $I$ is the closed interval $I = [a,b]$. Using the law of total probability we can express this as:
 \begin{equation}
     F_{X|X\in{I}}(x) = \frac{\int_a^xf_X(x)dx}{c} = \frac{\int_a^xf_X(x)dx}{\int_a^bf_X(x)dx} = \frac{F_X(x)-F_X(a)}{F_X(b)-F_X(a)}
+    \label{acdf}
 \end{equation}
-From this we can easily compute the conditional probability density function
+Where $c$ is a normalising constant. From this we can easily compute the conditional probability density function:
 \begin{equation}
     f_{X|X\in{I}}(x) = \frac{dF_{X|X\in{I}}(x)}{dx} = \frac{f_X(x)}{F_X(b)-F_X(a)}
 \end{equation}
@@ -41,23 +42,26 @@ From this we can easily compute the conditional probability density function
 By the definition of an inverse distribution we want to find a probability distribution function $F_{X|X \in I}^{-1}(u)$ such as:
 \begin{equation}
     F_{X|X \in I}(F_{X|X \in I}^{-1}(u)) = u
+    \label{inverse}
 \end{equation}
-where $u$ is a variable sampled from a uniform distribution $u \sim U[0,1]$. Inserting our expression for $F_{X|X \in I}(x)$ gives us
+where $u$ is a variable sampled from a uniform distribution $u \sim U[0,1]$. Rewriting the left side in (\ref{inverse}) with (\ref{acdf}) gives us the following expression:
 \begin{equation}
     \frac{F_X(F_{X|X\in I}^{-1}(u))-F_X(a)}{F_X(b)-F_X(a)} = u
 \end{equation}
-Solving for $F_{X|X\in I}^{-1}(x)$ gives us
+Solving for $F_{X|X\in I}^{-1}(x)$ gives us:
 \begin{equation}
     F_{X|X\in I}^{-1}(u) = F_X^{-1}((F_X(b)-F_X(a))u + F_X(a))
+    \label{finvers}
 \end{equation}
 
+By using this it's possible to simulate samples from a uniform distribution and then calculate the inverse in (\ref{finvers}) to get a conditionally simulation of $X \in I$.
 
 \newpage
 \section{Power Production of a Wind Turbine}
 \label{sec:oneTurbine}
 
 \subsection*{a) Crude Monte-Carlo sampling}
-To calculate an initial estimate of the power production of the Wind Turbine we start by sampling the power production using regular Monte-Carlo sampling. We begin by generating $10^5$ samples of wind distributed by a Weibull distribution. We then calculate the generated power for each wind sample and then find the average and the variance for each month. The estimate is calculated as follows:
+To calculate an initial estimate of the power production of the Wind Turbine we start by sampling the power production using regular Monte-Carlo sampling. We begin by generating $10^5$ samples of wind distributed by a Weibull distribution for each month. We then calculate the generated power for each wind sample and then find the average and the variance for each month. The estimate is calculated as follows:
 \begin{equation}
     \tau = \mathbb{E}[\phi(X)] = \frac{1}{N}\sum_{i = 1}^N\phi(X_i)
 \end{equation}
@@ -149,7 +153,7 @@ and
     V^\prime = P(F_{X|X\in I}^{-1}(1-u))
 \end{equation}
 
-Generating $10^5$ samples of $u$ and running each sample through both inverse distributions before avaluating the power production from those samples gives us the two stochastic variables $V$ and $V^\prime$ This gives us two identically distributed wind samples with negative covariance. The results are presented in table \ref{tab:ATresults}.
+Generating $10^5$ samples of $u$ and running each sample through both inverse distributions before evaluating the power production from those samples gives us the two stochastic variables $V$ and $V^\prime$ This gives us two identically distributed wind samples with negative covariance. The results are presented in table \ref{tab:ATresults}.
 
 \begin{table}[H]
     \centering
@@ -257,5 +261,37 @@ Since we have already found all these values we simply plug them in to find the 
     \label{tab:multivarRes}
     \include{tables/multivarRes}
 \end{table}
+
+\subsection*{d)}
+
+\subsubsection*{Probability that the combined power is greater than 3.075MV}
+
+The estimation of $(\mathbb{P}(P(V_1) + P(V_2) > 3.075MV))$ was done by utilizing importance sampling with the help of a indicator function. Instead of estimating the mean, the target function $\phi(V_1, V_2)$ was selected as follows:
+
+\begin{equation}
+    \phi(V_1, V_2)=\begin{cases}
+        1, & P(V_1) + P(V_2) > 3.075MW\\ 
+        0, & otherwise 
+    \end{cases}
+\end{equation}
+
+The sum of the power of the two turbines is only greater than zero when at least one of the winds, $V_1$ or $V_2$, is between 3 and 25. This makes the area that we want to integrate over limited in the space. 
+
+The product of the target function and the bivariate distribution, $\phi(V_1, V_2)f(V_1, V_2)$, was plotted as seen in figure (SÄTT IN REF). From thisi, it was decided to select a distribution such that $X \in \mathcal{N}(\mu, \Sigma)$, where $\mu = [10,10]$ and $\Sigma = [[15, 2], [2, 15]]$
+
+X was drawn from G and the samples were then calculated according to the normal procedure. The probability that the sum of two turbines is grater than 3.075MW is then equal to the mean of the samples. The mean and the confidence interval can be seen in table (SÄTT IN REF HÄR).
+
+\subsubsection*{Probability that the combined power is lower than 3.075MV}
+
+To calculate the probability that the combine power is less than 3.075MW it's possible to use a similar approach as above with some modifications. We start by defining $\phi$ as:
+
+\begin{equation}
+    \phi(V_1, V_2)=\begin{cases}
+        1, & P(V_1) + P(V_2) < 3.075MW\\ 
+        0, & otherwise 
+    \end{cases}
+\end{equation}
+
+The problem here is that the area we want to integrate over is not limited as in the task above because we now need to include all cases were the power is 0, ie either of the two wind is over 25 m/s. Because the bivariate weibull distribution is converging to zero faster than a bivariate normal distribution, we cannot select $g(x_1, x_2)$ as a multivariate normal because this will affect the variance of the estimate negatively. To solve this we did the sampling two times from a weibull distribution instead.
 
 \end{document}
