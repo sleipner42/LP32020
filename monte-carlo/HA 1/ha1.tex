@@ -16,6 +16,7 @@
 \author{Kristoffer Nordström, Noah Hansson}\author{Kristoffer Nordström \\ kr8245no-s@student.lu.se \and  Noah Hansson \\ no3822ha-s@student.lu.se}
 \date{\today}
 
+
 \setlength{\parskip}{0.7em}
 \setlength{\parindent}{0pt}
 \setlength{\floatsep}{6pt plus 1.0pt minus 2.0pt}
@@ -241,7 +242,7 @@ $\begin{pmatrix}
 \begin{figure}[H]
     \centering
     \includegraphics[width = 1.0\textwidth]{images/mtBruno}
-    \caption{Importance sampling of $\mathbb{E}[P(V_1)P(V_2)]$ using a bivariate normal distribution as $g(x)$}
+    \caption{Importance sampling of $\mathbb{E}[P(V_1)P(V_2)]$ (opaque surface) using a bivariate normal distribution as $g(x)$ (transparent surface)}
     \label{fig:mtBruno}
 \end{figure}
 
@@ -264,9 +265,9 @@ Since we have already found all these values we simply plug them in to find the 
 
 \subsection*{d)}
 
-\subsubsection*{Probability that the combined power is greater than 3.075MV}
+\subsubsection*{Probability that the combined power is greater than 3.075MW}
 
-The estimation of $(\mathbb{P}(P(V_1) + P(V_2) > 3.075MV))$ was done by utilizing importance sampling with the help of a indicator function. Instead of estimating the mean, the target function $\phi(V_1, V_2)$ was selected as follows:
+The estimation of $\mathbb{P}(P(V_1) + P(V_2) > 3.075MV)$ is done by utilizing importance sampling with the help of an indicator function. Instead of estimating the mean, the target function $\phi(V_1, V_2)$ is selected as follows:
 
 \begin{equation}
     \phi(V_1, V_2)=\begin{cases}
@@ -277,11 +278,18 @@ The estimation of $(\mathbb{P}(P(V_1) + P(V_2) > 3.075MV))$ was done by utilizin
 
 The sum of the power of the two turbines is only greater than zero when at least one of the winds, $V_1$ or $V_2$, is between 3 and 25. This makes the area that we want to integrate over limited in the space. 
 
-The product of the target function and the bivariate distribution, $\phi(V_1, V_2)f(V_1, V_2)$, was plotted as seen in figure (SÄTT IN REF). From thisi, it was decided to select a distribution such that $X \in \mathcal{N}(\mu, \Sigma)$, where $\mu = [10,10]$ and $\Sigma = [[15, 2], [2, 15]]$
+The product of the target function and the bivariate distribution, $\phi(V_1, V_2)f(V_1, V_2)$, is plotted in figure \ref{fig:3Dprob}. We then select a distribution such that $X \in \mathcal{N}(\mu, \Sigma)$, where $\mu = [10,10]$ and $\Sigma = [[15, 2], [2, 15]]$
 
 X was drawn from G and the samples were then calculated according to the normal procedure. The probability that the sum of two turbines is grater than 3.075MW is then equal to the mean of the samples. The mean and the confidence interval can be seen in table (SÄTT IN REF HÄR).
 
-\subsubsection*{Probability that the combined power is lower than 3.075MV}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{images/probability3D}
+    \caption{Importance sampling of $\mathbb{P}[P(V_1) + P(V_2) > 3.075 MW]$ (Opaque surface) using a bivariate normal distribution as $g(x)$ (transparent surface)}
+    \label{fig:3Dprob}
+\end{figure}
+
+\subsubsection*{Probability that the combined power is lower than 3.075MW}
 
 To calculate the probability that the combine power is less than 3.075MW it's possible to use a similar approach as above with some modifications. We start by defining $\phi$ as:
 
