@@ -72,12 +72,12 @@ The results are presented in table \ref{tab:CrudeResults} and the samples for ja
     \centering
     \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{tab:CrudeResults}
-    \include{crudeMC}
+    \include{tables/crudeMC}
 \end{table}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 1.0\textwidth]{janCrude}
+    \includegraphics[width = 1.0\textwidth]{images/janCrudeMC}
     \caption{Sampled wind speed (left) and power production (right) for January}
     \label{fig:samplesJan}
 \end{figure}
@@ -87,14 +87,14 @@ Since we know that the wind turbine produces no power when the wind speed is abo
 The results are presented in table \ref{tab:CrudeResultsTrunc} and the samples for january are plotted in figure \ref{fig:samplesJanTrunc}.
 \begin{table}[H]
     \centering
-    \include{crudeMCtrunc}
+    \include{tables/crudeMCtrunc}
     \caption{Crude Monte Carlo estimates and confidence intervals of power production for each month of the year using truncated wind samples}
     \label{tab:CrudeResultsTrunc}
 \end{table}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 1.0\textwidth]{janCrudeTrunc}
+    \includegraphics[width = 1.0\textwidth]{images/janCrudeMCTrunc}
     \caption{Sampled truncated wind speed (left) and power production (right) for January}
     \label{fig:samplesJanTrunc}
 \end{figure}
@@ -127,12 +127,12 @@ In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)
     \centering
     \caption{Importance Sampling Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{tab:ISresults}
-    \include{ISMC}
+    \include{tables/ISMC}
 \end{table}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 1.0\textwidth]{janISMC}
+    \includegraphics[width = 1.0\textwidth]{images/janISMC}
     \caption{$g(x)$ (scale-transformed) and $\phi(x)*f_X(x)$ (left) and $\omega(x)$ (right) for January}
     \label{fig:ISMCjan}
 \end{figure}
@@ -155,7 +155,7 @@ Generating $10^5$ samples of $u$ and running each sample through both inverse di
     \centering
     \caption{Antithetic Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{tab:ATresults}
-    \include{ATSMC}
+    \include{tables/ATSMC}
 \end{table}
 
 \subsection*{d) Probability of power production}
@@ -169,7 +169,7 @@ The probability for each year is presented in table \ref{tab:powerprob}.
     \centering
     \caption{Probability of a wind turbine producing power for each month of the year}
     \label{tab:powerprob}
-    \include{powerProb}
+    \include{tables/powerProb}
 \end{table}
 
 \subsection*{e) Average power coefficient}
@@ -186,7 +186,7 @@ This is done in the same way as in section 2b). The results are presented in tab
     \centering
     \caption{Average power ratio for a wind turbine for each month of the year}
     \label{tab:powercoeff}
-    \include{powerRatio}
+    \include{tables/powerRatio}
 \end{table}
 
 \subsection*{f) Availability and Capacity factor}
