@@ -155,7 +155,7 @@ Generating $10^5$ samples of $u$ and running each sample through both inverse di
     \centering
     \caption{Antithetic Monte Carlo estimates and confidence intervals of power production for each month of the year}
     \label{tab:ATresults}
-    \include{tables/ATSMC}
+    \include{tables/ATMC}
 \end{table}
 
 \subsection*{d) Probability of power production}
@@ -181,7 +181,15 @@ In practice however, the power production of a wind turbine is much lower. Here 
 \begin{equation}
   \mathbb{E}[\frac{P(V)}{P_{tot}(V)}]
 \end{equation}
-This is done in the same way as in section 2b). The results are presented in table \ref{tab:powercoeff}.
+This is done in the same way as in section 2b), but here we use a weibull distribution instead. The results are presented in table \ref{tab:powercoeff}. The instrumental distribution and weight function for January are presented in figure \ref{fig:janPowerRatio}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{images/janPowerRatio}
+    \caption{$g(x)$ (scale-transformed) and $\phi(x)*f_X(x)$ (left) and $\omega(x)$ (right) for January}
+    \label{fig:janPowerRatio}
+\end{figure}
+
 \begin{table}[H]
     \centering
     \caption{Average power ratio for a wind turbine for each month of the year}
