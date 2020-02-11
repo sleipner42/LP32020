@@ -35,4 +35,13 @@ All possible Self Avoiding Walks (SAW), $S_{n+m}(d)$, could be constructed by co
     c_{n+m}(d)\leq c_n(d)c_m(d)
 \end{equation}
 
+\section*{2)}
+From the result in section 1 we can prove that the logarithm of $c_n$ is subadditive:
+\begin{equation}
+    c_{n+m}(d) \leq c_n(d)c_m(d) \rightarrow log(c_{n+m}) \leq log(c_n(d)c_m(d)) = log(c_n(d)) + log(c_m(d))
+\end{equation}
+
+ Therefore, we can use \textit{Fekete's Lemma} to prove that $\lim_{n\rightarrow\infty} \frac{log(c_n(d))}{n}$ exists. Since $e(x)$ is a well defined function for all $x$, we know that the limit $\lim_{n\rightarrow\infty} exp(\frac{log(c_n(d))}{n}) = \lim_{n\rightarrow\infty} c_n(d)^{1/n}$ exists. 
+
+
 \end{document}
