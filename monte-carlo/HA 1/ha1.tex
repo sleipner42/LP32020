@@ -7,6 +7,7 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[margin=1in]{geometry}
 
 \pagestyle{fancy}
 \rhead{Home Assignment 1}
@@ -301,5 +302,23 @@ To calculate the probability that the combine power is less than 3.075MW it's po
 \end{equation}
 
 The problem here is that the area we want to integrate over is not limited as in the task above because we now need to include all cases were the power is 0, ie either of the two wind is over 25 m/s. Because the bivariate weibull distribution is converging to zero faster than a bivariate normal distribution, we cannot select $g(x_1, x_2)$ as a multivariate normal because this will affect the variance of the estimate negatively. To solve this we did the sampling two times from a weibull distribution instead.
+
+The resulting probabilities that the power production is either over or under half of the maximum capacity can be seen in table (\ref{table:probabilities}). Due to the fact that the probabilities are created from two separate simulations there is only a low probability that the two probabilities will sum to 1. 
+
+
+\begin{table}[H]
+    \centering
+    \caption{Simulated probabilities that the total power production is either over or under half of the max capacity.}
+    \begin{tabular}{lcc}
+        \toprule
+        & $\mathbb{P}$ & $I_{95\%}$ \\
+        \midrule
+        $P(V_1) + P(V_2) > 3.075MV$ & 44.05\% & $\pm$0.21 \% \\
+        $P(V_1) + P(V_2) < 3.075MV$ & 55.46\% & $\pm$0.37 \% \\
+        \bottomrule
+    \end{tabular}
+    \label{table:probabilities}
+\end{table}
+    
 
 \end{document}
