@@ -87,7 +87,7 @@ The results are presented in table \ref{tab:CrudeResults} and the samples for ja
     \label{fig:samplesJan}
 \end{figure}
 
-Since we know that the wind turbine produces no power when the wind speed is above 25 m/s or below 3 m/s we can modify our Monte Carlo simulation by truncating our wind samples. Using the results in section \ref{sec:RNG} we can instead generate wind samples within the interval $[3,25]$ m/s to reduce the variance of $\tau$. In order to compensate for the truncation we then multiply the estimates by the probability that the wind speed is within the interval.
+Since we know that the wind turbine produces no power when the wind speed is above 25 m/s or below 3 m/s we can modify our Monte Carlo simulation by truncating our wind samples. Using the results in section \ref{sec:RNG} we can instead generate wind samples within the interval $[3,25]$ m/s to reduce the variance of $\tau$. In order to compensate for the truncation we then multiply the estimates by the probability from section 1a that the wind speed is within the interval, ie multiplying by $(F_X(b)-F_X(a))$
 
 The results are presented in table \ref{tab:CrudeResultsTrunc} and the samples for january are plotted in figure \ref{fig:samplesJanTrunc}.
 \begin{table}[H]
@@ -154,7 +154,7 @@ and
     V^\prime = P(F_{X|X\in I}^{-1}(1-u))
 \end{equation}
 
-Generating $10^5$ samples of $u$ and running each sample through both inverse distributions before evaluating the power production from those samples gives us the two stochastic variables $V$ and $V^\prime$ This gives us two identically distributed wind samples with negative covariance. The results are presented in table \ref{tab:ATresults}.
+Generating $10^5$ samples of $u$ and running each sample through both inverse distributions before evaluating the power production from those samples gives us the two stochastic variables $V$ and $V^\prime$ This gives us two identically distributed wind samples with negative covariance. Finally we calculate $W$ to find $\tau$. Since we used the truncated inverse probability function we need to multiply the estimates by the probability of the wind speed being in the interval $[3,25]$ as in section 2a. The results are presented in table \ref{tab:ATresults}.
 
 \begin{table}[H]
     \centering
