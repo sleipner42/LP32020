@@ -56,11 +56,19 @@ Solving for $F_{X|X\in I}^{-1}(x)$ gives us:
     \label{finvers}
 \end{equation}
 
-By using this it's possible to simulate samples from a uniform distribution and then calculate the inverse in (\ref{finvers}) to get a conditionally simulation of $X \in I$.
+By using this inverse probability function it's possible to simulate samples from a uniform distribution and then calculate the inverse in (\ref{finvers}) to simulate samples from $F_{X| X\in I}(x)$.
 
 \newpage
 \section{Power Production of a Wind Turbine}
 \label{sec:oneTurbine}
+In this section we will use different methods of Monte Carlo simulation to approximate the power production of a wind turbine. The power production of a turbine is dependant on the wind speed $V$ passing through the rotors. The amount of power generated for each wind speed can be calculated using the power curve of the turbine, as seen in figure \ref{fig:powercurve}. Furthermore, the wind speed $V$ is assumed to be Weibull distributed, with parameters that vary for each month.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{images/powercurve}
+    \caption{Sampled wind speed (left) and power production (right) for January}
+    \label{fig:powercurve}
+\end{figure}
 
 \subsection*{a) Crude Monte-Carlo sampling}
 To calculate an initial estimate of the power production of the Wind Turbine we start by sampling the power production using regular Monte-Carlo sampling. We begin by generating $10^5$ samples of wind distributed by a Weibull distribution for each month. We then calculate the generated power for each wind sample and then find the average and the variance for each month. The estimate is calculated as follows:
@@ -88,7 +96,7 @@ The results are presented in table \ref{tab:CrudeResults} and the samples for ja
     \label{fig:samplesJan}
 \end{figure}
 
-Since we know that the wind turbine produces no power when the wind speed is above 25 m/s or below 3 m/s we can modify our Monte Carlo simulation by truncating our wind samples. Using the results in section \ref{sec:RNG} we can instead generate wind samples within the interval $[3,25]$ m/s to reduce the variance of $\tau$. In order to compensate for the truncation we then multiply the estimates by the probability from section 1a that the wind speed is within the interval, ie multiplying by $(F_X(b)-F_X(a))$
+Since we know that the wind turbine produces no power when the wind speed is above 25 m/s or below 3 m/s we can modify our Monte Carlo simulation by truncating the wind samples. Using the results in section \ref{sec:RNG} we can instead generate wind samples within the interval $[3,25]$ m/s to reduce the variance of $\tau$. In order to compensate for the truncation we then multiply the estimates by the probability from section 1a that the wind speed is within the interval, ie multiplying by $(F_X(b)-F_X(a))$
 
 The results are presented in table \ref{tab:CrudeResultsTrunc} and the samples for january are plotted in figure \ref{fig:samplesJanTrunc}.
 \begin{table}[H]
@@ -107,7 +115,7 @@ The results are presented in table \ref{tab:CrudeResultsTrunc} and the samples f
 
 
 \subsection*{b) Importance Sampling}
-To reduce the variance of the Monte-Carlo estimate we will here apply the importance sampling method. When we generate random wind samples we sometimes get samples of wind speed that give us a power production of zero. These samples give do not help finding a better estimate of the average power, as they only increase the variance of the estimator. Instead, we try to find an instrumental density g where we then draw our wind samples from. This reduces the amount of "bad" samples and reduces the variance of the estimator. \noindent To find an estimate of the average power production we use the following calculations, where the density $g(x)$ is a density such as $g(x) = 0 \rightarrow \phi(x)f(x) = 0$
+To reduce the variance of the Monte-Carlo estimate we will here apply the importance sampling method. When we generate random wind samples we sometimes get samples of wind speed that give a power production of zero. These samples give do not help finding a better estimate of the average power, as they only increase the variance of the estimator. Instead, we try to find an instrumental density g where we then draw our wind samples from. This reduces the amount of "bad" samples and reduces the variance of the estimator. \noindent To find an estimate of the average power production we use the following calculations, where the density $g(x)$ is a density such as $g(x) = 0 \rightarrow \phi(x)f(x) = 0$
 \begin{equation}
     \begin{gathered}
         \tau = \mathbb{E}_f(\phi(X)) = \int_{|\phi(x)|f(x)>0}\phi(x)f(x)dx = \int_{g(x)>0}\phi(x)\frac{f(x)}{g(x)}g(x)dx = \\
@@ -127,7 +135,7 @@ with the variance
     \mathbb{V}[\tau_N] = \frac{1}{N}\mathbb{V}_g[\phi(X)\omega(X)]
 \end{equation}
 
-In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)$ and has a support that includes the whole support of $f(x)\phi(x)$. We then fine tune $g(x)$ such that the function $\phi(x)\omega(x)$ is close to constant in the support of $g(x)$. We then draw $10^5$ samples from $g(x)$ as the stochastic variable $X$ to estimate $\tau$. The results are presented in table \ref{tab:ISresults}. In this case we choose $g(x)$ as a normal distribution.
+In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)$ and has a support that includes the whole support of $f(x)\phi(x)$. We then fine tune $g(x)$ such that the function $\phi(x)\omega(x)$ is close to constant in the support of $g(x)$. We then draw $10^5$ samples from $g(x)$ as the stochastic variable $X$ to estimate $\tau$. The results are presented in table \ref{tab:ISresults}. In this case we choose $g(x)$ as a scale and location shifted gamma distribution.
 
 \begin{table}[H]
     \centering
@@ -139,7 +147,7 @@ In practice, we aim at finding a distribution $g(x)$ that resembles $f(x)\phi(x)
 \begin{figure}[H]
     \centering
     \includegraphics[width = 1.0\textwidth]{images/janISMC}
-    \caption{$g(x)$ (scale-transformed) and $\phi(x)*f_X(x)$ (left) and $\omega(x)$ (right) for January}
+    \caption{$g(x)$ and $\phi(x)f_X(x)$ (left) and $\omega(x)$ (right) for January}
     \label{fig:ISMCjan}
 \end{figure}
 
@@ -187,12 +195,12 @@ In practice however, the power production of a wind turbine is much lower. Here 
 \begin{equation}
   \mathbb{E}[\frac{P(V)}{P_{tot}(V)}]
 \end{equation}
-This is done in the same way as in section 2b), but here we use a weibull distribution instead. The results are presented in table \ref{tab:powercoeff}. The instrumental distribution and weight function for January are presented in figure \ref{fig:janPowerRatio}.
+This is done in the same way as in section 2b with importance sampling, but here we use a weibull distribution instead. The results are presented in table \ref{tab:powercoeff}. The instrumental distribution $g(x)$ and weight function $\omega(x)$ for January are presented in figure \ref{fig:janPowerRatio}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 1.0\textwidth]{images/janPowerRatio}
-    \caption{$g(x)$ (scale-transformed) and $\phi(x)*f_X(x)$ (left) and $\omega(x)$ (right) for January}
+    \caption{$g(x)$ (scale-transformed) and $\phi(x)f_X(x)$ (left) and $\omega(x)$ (right) for January}
     \label{fig:janPowerRatio}
 \end{figure}
 
@@ -204,7 +212,7 @@ This is done in the same way as in section 2b), but here we use a weibull distri
 \end{table}
 
 \subsection*{f) Availability and Capacity factor}
-We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output of $3.075MW$, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production obtained in section 2c by the maximum power production. The availability factor is already calculated in section 2d. The yearly average of these metrics can be found in table \ref{tab:metrics}.
+We now evaluate a metric to be able to evaluate if the power production of the wind turbine is satisfactory. The two metrics to evaluate are the \textit{capacity factor}, the ratio of outout compared to the maximum possible output of $3.075MW$, as well as the \textit{availability factor}, the amount of time that the turbine is actually producing power. For the capacity factor, we divide the expected power production obtained in section 2c by the maximum power production. The availability factor is already calculated in section 2d. The yearly average of these metrics can be found in table \ref{tab:metrics}. From the last row in the table we can read that the wind turbine has a yearly average capacity factor of $47\%$ and availability factor of $89\%$. This indicates that the wind speed could be deemed appropriate enough to build a wind turbine. since the high capacity factor compensates for the somewhat low availability factor.
 
 \begin{table}[H]
     \centering
@@ -216,11 +224,12 @@ We now evaluate a metric to be able to evaluate if the power production of the w
 \newpage
 \section{Power production of two wind turbines}
 \label{sec:twoTurbines}
+In this section we are interested in the combined power production of two wind turbines. The wind turbines each have the same power curve as in section 2. Here we have to account for that the wind speed passing through the two turbines is jointly distributed. Generally, this requires multivariate Monte Carlo sampling.
 
-\subsection*{a)}
+\subsection*{a) Expected power production}
 In order to find the expectation of the sum of power production, $\mathbb{E}[P(v_1) + P(v_2)]$ we can simply find the sum of expectations, i.e $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)]$. Since $v_1$ and $v_2$ are identically distributed we can approximate the sum of expectations as $\mathbb{E}[P(v_1)] + \mathbb{E}[P(v_2)] = 2\mathbb{E}[P(V_1)]$, which then is reduced to a one-dimensional problem. Therefore, we use importance sampling as in section 2b) to find an estimate. Using the yearly average parameters of $\lambda = 9.13$ and $k = 1.96$ we find the estimates of the expected power production as presented in table \ref{tab:multivarRes}.
 
-\subsection*{b)}
+\subsection*{b) Covariance of power production}
 To find the covariance of the power production we can use the calculation
 \begin{equation}
      \mathbb{C}[P(V_1), P(V_2)] = \mathbb{E}[P(V_1)P(V_2)] - \mathbb{E}[P(V_1)]\mathbb{E}[P(V_2)]
@@ -231,7 +240,9 @@ Since we already know the expected power production of one wind turbine from sec
 \end{equation}
 
 \begin{equation}
-    f_V(v_1, v_2) = f_V(v_1)f_V(v_2)[1 + \alpha(1-F_V(v_1)^p)^{q-1}(1-F_V(v_2)^p)^{q-1}(F_V(v_1)^p(1+pq)-1)(F_V(v_2)^p(1+pq)-1)]
+    \begin{gathered}
+    f_V(v_1, v_2) = f_V(v_1)f_V(v_2)[1 + \alpha(1-F_V(v_1)^p)^{q-1} * \\ * (1-F_V(v_2)^p)^{q-1}(F_V(v_1)^p(1+pq)-1)(F_V(v_2)^p(1+pq)-1)]
+    \end{gathered}
 \end{equation}
 
 For the importance sampling distribution we set $g(v_1, v_2)$ as a bivariate normal distribution with a mean of $[12,12]$ and a covariance matrix of 
@@ -250,7 +261,7 @@ $\begin{pmatrix}
 
 The results are presented in table \ref{tab:multivarRes}.
 
-\subsection*{c)}
+\subsection*{c) Variance and standard deviation of the combined power production}
 The variance of the combined power production can be computed using the following calculations
 \begin{equation}
     \mathbb{V}[P(V_1) + P(V_2)] = \mathbb{V}[P(V_1)] + \mathbb{V}[P(V_1)] + 2\mathbb{C}[P(V_1), P(V_2)]
@@ -281,7 +292,7 @@ The sum of the power of the two turbines is only greater than zero when at least
 
 The product of the target function and the bivariate distribution, $\phi(V_1, V_2)f(V_1, V_2)$, is plotted in figure \ref{fig:3Dprob}. We then select a distribution such that $X \in \mathcal{N}(\mu, \Sigma)$, where $\mu = [10,10]$ and $\Sigma = [[15, 2], [2, 15]]$
 
-X was drawn from G and the samples were then calculated according to the normal procedure. The probability that the sum of two turbines is grater than 3.075MW is then equal to the mean of the samples. The mean and the confidence interval can be seen in table (SÄTT IN REF HÄR).
+X was drawn from G and the samples were then calculated according to the normal procedure. The probability that the sum of two turbines is grater than 3.075MW is then equal to the mean of the samples. The mean and the confidence interval can be seen in table \ref{table:probabilities}.
 
 \begin{figure}[H]
     \centering
@@ -301,7 +312,7 @@ To calculate the probability that the combine power is less than 3.075MW it's po
     \end{cases}
 \end{equation}
 
-The problem here is that the area we want to integrate over is not limited as in the task above because we now need to include all cases were the power is 0, ie either of the two wind is over 25 m/s. Because the bivariate weibull distribution is converging to zero faster than a bivariate normal distribution, we cannot select $g(x_1, x_2)$ as a multivariate normal because this will affect the variance of the estimate negatively. To solve this we did the sampling two times from a weibull distribution instead.
+The problem here is that the area we want to integrate over is not limited as in the task above because we now need to include all cases were the power is 0, ie either of the two wind is over 25 m/s. Because the bivariate weibull distribution is converging to zero faster than a bivariate normal distribution, we cannot select $g(x_1, x_2)$ as a multivariate normal because this will affect the variance of the estimate negatively. To solve this we did the sampling two times from a weibull distribution instead. Unfortunately, these joint (but independent) weibull distributions cannot be 3D-plotted easily.
 
 The resulting probabilities that the power production is either over or under half of the maximum capacity can be seen in table (\ref{table:probabilities}). Due to the fact that the probabilities are created from two separate simulations there is only a low probability that the two probabilities will sum to 1. 
 
