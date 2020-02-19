@@ -32,6 +32,7 @@
 All possible Self Avoiding Walks (SAW), $S_{n+m}(d)$, could be constructed by combining n-step SAWs with m-step SAWs, but all of these combination will not be self avoiding and thus is
 
 \begin{equation}
+    \label{eq:multiplicity}
     c_{n+m}(d)\leq c_n(d)c_m(d)
 \end{equation}
 
@@ -43,5 +44,46 @@ From the result in section 1 we can prove that the logarithm of $c_n$ is subaddi
 
  Therefore, we can use \textit{Fekete's Lemma} to prove that $\lim_{n\rightarrow\infty} \frac{log(c_n(d))}{n}$ exists. Since $e(x)$ is a well defined function for all $x$, we know that the limit $\lim_{n\rightarrow\infty} exp(\frac{log(c_n(d))}{n}) = \lim_{n\rightarrow\infty} c_n(d)^{1/n}$ exists. 
 
+ \section*{7)}
+
+ To find a bound for $\mu_d$ we can use the following equation:
+
+\begin{equation}
+    \label{eq:limit}
+     \mu_d = \lim_{n \to \infty} c_d(n)^{1/n}
+\end{equation}
+
+
+First, we begin by finding an upper and a lower bound for $c_d(n)$. For the upper bound, we know that the maximum amount of self-avoiding random walks is bounded by the maximum possible amount of random walks, $(2d)^n$. Furthermore, we can extend this reasoning to also exclude the walks when a step simply retraces its previous step, reducing the upper bound of self-avoiding random walks to $(2d-1)^n$. For the lower bound, we know that all random walks that only step in positive directions will be self-avoiding. Therefore we find a lower bound of $d^n$. This gives us the expression \begin{equation}
+    d^n \leq c_d(n) \leq (2d-1)^n
+\end{equation}
+We then take the limit as in equation (\ref{eq:limit}) of the bounds as well as $c_n(d)$. This gives us:
+\begin{equation}
+    \lim_{n \to \infty} (d^n)^{1/n} \leq \lim_{n \to \infty} c_n(d)^{1/n} \leq \lim_{n \to \infty} ((2d-1)^n)^{1/n}
+\end{equation}
+Simplifying and inserting equation (\ref{eq:limit}) gives us:
+\begin{equation}
+    d \leq \mu_d \leq 2d-1
+\end{equation}
+
+\section*{8)}
+We can find a lower bound for $A_d$ when $d \geq 5$ by using the equation:
+\begin{equation}
+    \label{eq:cd}
+    c_n(d) = 
+    \begin{cases}
+        A_d\mu_d^nn^{\gamma-1}, \quad d = 1, 2, 3, d \geq 5 \\
+        A_d\mu_d^n\log(n)^{1/4}, \quad d = 4
+    \end{cases}, \quad as \; n \to \infty
+\end{equation}
+
+For any integers $a$ and $b$ such that $a \to \infty$ and $b \to \infty$ we can plug in equation (\ref{eq:cd}) to equation (\ref{eq:multiplicity}) to get:
+\begin{equation}
+    A_d\mu_d^{a+b}(a+b)^{\gamma_d-1} = c_{n+m}(d)\leq c_n(d)c_m(d) = A_d\mu_d^aa^{\gamma-1}A_d\mu_d^bb^{\gamma-1}
+\end{equation}
+Since it is known that $\gamma = 1$ for $d \geq 5$ we can simplify this to:
+\begin{equation}
+    A_d\mu^{a+b} \leq A_d^2\mu^{a+b} \implies A_d \geq 1
+\end{equation}
 
 \end{document}
