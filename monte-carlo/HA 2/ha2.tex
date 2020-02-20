@@ -106,6 +106,23 @@ Using $N = 10^4$ approximations of $c_n(2)$ are presented in table \ref{tab:self
     \include{tables/self_avoding_results}
 \end{table}
 
+\section*{5)}
+To improve on the results in task 4 we can introduce resampling to the importance sampling. For each step $k$, we replace all particles $X_i^{0:k}$ with randomly selected copies of the earlier particles $\widetilde{X}_i^{0:k}$, distributed by the weights of each particle. Particles with a larger weight have a higher probability of being copied. This further focuses the computing power to those particles that are not only self-avoiding, but also likely to happen. After the particles are resampled, all weights are set to equal.
+
+When using resampling it can be proved that $c_n(d)$ can be approximated by:
+\begin{equation}
+    c_n(d) = \prod_{k = 0}^n(\frac{1}{N}\sum_{i=1}^N\omega_k^i)
+\end{equation}
+
+Using $N = 10^4$ approximations of $c_n(2)$ are presented in table \ref{tab:resampling_results}.
+
+\begin{table}[H]
+    \centering
+    \caption{Approximations of $c_n(2)$ for different n, with a $95\%$ confidence interval by sampling random walks.}
+    \label{tab:resampling_results}
+    \include{tables/resampling_results}
+\end{table}
+
 \section*{7)}
 
 To find a bound for $\mu_d$ we can use the following equation:
