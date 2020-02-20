@@ -79,13 +79,26 @@ Using $N = 10^4$ approximations of $c_n(2)$ are presented in table XXX.
     \include{tables/random_walk_results}
 \end{table}
 
-\section*{4}
+\section*{4)}
 
 To be able to get longer self avoiding walks with fewer simulations, the distribution $g(x)$ which the selection of new point is drawn from was updated such that it is not possible to draw points that already has been visited. 
 
 The selection of new points is done by for each particle $X^{0:n}$ look at the last visited point $X^n$ and calculating all possible neighbours, for a given dimension $d$ this results in $2d$ possible neighbours. Neighbours that has already been visited before gets removed. One of the remaining neighbours get uniformly selected as $X^{n+1}$ and the probability for this is calculated as 1 over the number of possible unvisited neighbours.
 
-For each particle, new weights is calculated with (\ref{weights}). If $X^{0:n}$ don't have any possible neighbours, $X^{n+1}$ is selected as $X^n$, this will also results in a probability of zero and the corresponding weight for that particle will also be zero, killing the particle.
+For each particle, new weights is calculated with (\ref{eq:weights}). If $X^{n}$ don't have any possible neighbours, $X^{n+1}$ is selected as $X^n$, this will result in a probability of zero and that the corresponding weight for that particle will be zero, killing the particle.
+
+\section*{6)}
+
+By taking the logarithm of (\ref{eq:cd}) when $d=2$ the following equation is derived:
+
+\begin{equation}
+    ln(c_n(d)) =  ln(A_d)+ln(\mu_d)n+ln(n)({\gamma-1})
+    \label{eq:ln_cn}
+\end{equation}
+
+Rewriting (\ref{eq:ln_cn}) on matrix form yields:
+
+
 
 \section*{7)}
 
