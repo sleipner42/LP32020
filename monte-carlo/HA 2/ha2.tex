@@ -44,6 +44,14 @@ From the result in section 1 we can prove that the logarithm of $c_n$ is subaddi
 
  Therefore, we can use \textit{Fekete's Lemma} to prove that $\lim_{n\rightarrow\infty} \frac{log(c_n(d))}{n}$ exists. Since $e(x)$ is a well defined function for all $x$, we know that the limit $\lim_{n\rightarrow\infty} exp(\frac{log(c_n(d))}{n}) = \lim_{n\rightarrow\infty} c_n(d)^{1/n}$ exists. 
 
+ \section*{4}
+
+ To be able to get longer self avoiding walks with fewer simulations, the distribution $g(x)$ which the selection of new point is drawn from was updated such that it is not possible to draw points that already has been visited. 
+
+ The selection of new points is done by for each particle $X^{0:n}$ look at the last visited point $X^n$ and calculating all possible neighbours, for a given dimension $d$ this results in $2d$ possible neighbours. Neighbours that has already been visited before gets removed. One of the remaining neighbours get uniformly selected as $X^{n+1}$ and the probability for this is calculated as 1 over the number of possible unvisited neighbours.
+
+ For each particle, new weights is calculated with (\ref{weights}). If $X^{0:n}$ don't have any possible neighbours, $X^{n+1}$ is selected as $X^n$, this will also results in a probability of zero and the corresponding weight for that particle will also be zero, killing the particle.
+
  \section*{7)}
 
  To find a bound for $\mu_d$ we can use the following equation:
@@ -70,7 +78,7 @@ Simplifying and inserting equation (\ref{eq:limit}) gives us:
 We can find a lower bound for $A_d$ when $d \geq 5$ by using the equation:
 \begin{equation}
     \label{eq:cd}
-    c_n(d) = 
+    c_n(d) \sim 
     \begin{cases}
         A_d\mu_d^nn^{\gamma-1}, \quad d = 1, 2, 3, d \geq 5 \\
         A_d\mu_d^n\log(n)^{1/4}, \quad d = 4
@@ -79,7 +87,7 @@ We can find a lower bound for $A_d$ when $d \geq 5$ by using the equation:
 
 For any integers $a$ and $b$ such that $a \to \infty$ and $b \to \infty$ we can plug in equation (\ref{eq:cd}) to equation (\ref{eq:multiplicity}) to get:
 \begin{equation}
-    A_d\mu_d^{a+b}(a+b)^{\gamma_d-1} = c_{n+m}(d)\leq c_n(d)c_m(d) = A_d\mu_d^aa^{\gamma-1}A_d\mu_d^bb^{\gamma-1}
+    A_d\mu_d^{a+b}(a+b)^{\gamma_d-1} = c_{a+b}(d)\leq c_a(d)c_b(d) = A_d\mu_d^aa^{\gamma-1}A_d\mu_d^bb^{\gamma-1}
 \end{equation}
 Since it is known that $\gamma = 1$ for $d \geq 5$ we can simplify this to:
 \begin{equation}
