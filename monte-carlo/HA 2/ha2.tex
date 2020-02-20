@@ -44,7 +44,35 @@ From the result in section 1 we can prove that the logarithm of $c_n$ is subaddi
 
  Therefore, we can use \textit{Fekete's Lemma} to prove that $\lim_{n\rightarrow\infty} \frac{log(c_n(d))}{n}$ exists. Since $e(x)$ is a well defined function for all $x$, we know that the limit $\lim_{n\rightarrow\infty} exp(\frac{log(c_n(d))}{n}) = \lim_{n\rightarrow\infty} c_n(d)^{1/n}$ exists. 
 
- \section*{7)}
+\section*{3)}
+A first approach for estimating $c_n(2)$ is to generate $N$ random walks in $\mathbb{Z}^2$, and then count the amount of walks $N_{SA}$ that randomly happen to be self-avoiding. To sample random walks $X_i^{0:n}$ we draw 
+\begin{equation}
+    X_i^{n+1} \sim g_{n+1}(x_{n+1}|X^{0:n})
+\end{equation}
+where $g_{n+1}$ is the probability density of choosing a neighbouring point to the last point $X_i^n$. Since the walk is purely random, $g_{n+1}(x_{n+1}|X^{0:n}) = g_{n+1}(x_{n+1}|X^n)$ simply amounts to uniformly choosing a neigbour of $X^n$ with probability $p = \frac{1}{2d}$.
+
+For every step each walk gets assigned a weight based on the probability of the walk resulting in this particular walk. The weights are defined such that:
+\begin{equation}
+    \sum_{i = 1}^N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}\phi(X_i^{0:n}) \approx \mathbb{E}_{f_n}(\phi(X_{0:n})) 
+\end{equation}
+
+All walks are at $n = 0$ assigned equal weights: $\omega_0^i = 1$, $\forall i$, and are then for each step updated as:
+\begin{equation}
+    \label{eq:weights}
+    \omega_{n+1}^i = \frac{z_{n+1}(X_i^{0:n+1})}{z_{n}(X_i^{0:n})g_{n+1}(x_{n+1}|X^{0:n})} * \omega_n^i
+\end{equation}
+where $z_n(X_i^{0:n})$ is an indicator function with value $1$ if the walk if self-avoiding or $0$ otherwise.
+
+When the weights are updated two things can happen: either the walk has collided with itself and the weight is set to $0$, or the walk continues to be self-avoiding and is divided by the probability density. Therefore, the weights are either $\omega_n^i = (2d)^n$ or zero.
+
+From this, we can then find approximations of $c_n(d)$ by simulating N walks and then finding the mean of all weights, since this amounts to:
+\begin{equation}
+    c_n(d) = (2d)^n*\frac{N_{SA}}{N} = \sum_{i = 1}^N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}
+\end{equation}
+
+Using $N = 10^4$ we find the following approximations of $c_n(2)$
+
+\section*{7)}
 
  To find a bound for $\mu_d$ we can use the following equation:
 
