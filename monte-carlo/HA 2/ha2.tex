@@ -70,7 +70,14 @@ From this, we can then find approximations of $c_n(d)$ by simulating N walks and
     c_n(d) = (2d)^n*\frac{N_{SA}}{N} = \sum_{i = 1}^N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}
 \end{equation}
 
-Using $N = 10^4$ we find the following approximations of $c_n(2)$
+Using $N = 10^4$ approximations of $c_n(2)$ are presented in table XXX.
+
+\begin{table}[H]
+    \centering
+    \caption{Approximations of $c_n(2)$ for different n, with a $95\%$ confidence interval by sampling random walks.
+    \label{tab:random_walks_results}
+    \include{tables/random_walk_results}
+\end{table}
 
 \section*{7)}
 
@@ -98,7 +105,7 @@ Simplifying and inserting equation (\ref{eq:limit}) gives us:
 We can find a lower bound for $A_d$ when $d \geq 5$ by using the equation:
 \begin{equation}
     \label{eq:cd}
-    c_n(d) = 
+    c_n(d) \sim 
     \begin{cases}
         A_d\mu_d^nn^{\gamma-1}, \quad d = 1, 2, 3, d \geq 5 \\
         A_d\mu_d^n\log(n)^{1/4}, \quad d = 4
