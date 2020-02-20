@@ -29,7 +29,8 @@
 
 \section*{1)}
 
-All possible Self Avoiding Walks (SAW), $S_{n+m}(d)$, could be constructed by combining n-step SAWs with m-step SAWs, but all of these combination will not be self avoiding and thus is
+All possible Self Avoiding Walks (SAW), $S_{n+m}(d)$, could be constructed by combining n-step SAWs with m-step SAWs, but all of these combination are not certain to
+ be self avoiding and thus is
 
 \begin{equation}
     \label{eq:multiplicity}
@@ -39,10 +40,14 @@ All possible Self Avoiding Walks (SAW), $S_{n+m}(d)$, could be constructed by co
 \section*{2)}
 From the result in section 1 we can prove that the logarithm of $c_n$ is subadditive:
 \begin{equation}
-    c_{n+m}(d) \leq c_n(d)c_m(d) \rightarrow log(c_{n+m}) \leq log(c_n(d)c_m(d)) = log(c_n(d)) + log(c_m(d))
+    \begin{gathered}
+        c_{n+m}(d) \leq c_n(d)c_m(d) \\
+        \iff \\
+        log(c_{n+m}) \leq log(c_n(d)c_m(d)) = log(c_n(d)) + log(c_m(d))
+    \end{gathered}
 \end{equation}
 
- Therefore, we can use \textit{Fekete's Lemma} to prove that $\lim_{n\rightarrow\infty} \frac{log(c_n(d))}{n}$ exists. Since $e(x)$ is a well defined function for all $x$, we know that the limit $\lim_{n\rightarrow\infty} exp(\frac{log(c_n(d))}{n}) = \lim_{n\rightarrow\infty} c_n(d)^{1/n}$ exists. 
+Therefore, we can use \textit{Fekete's Lemma} to prove that $\lim_{n\rightarrow\infty} \frac{log(c_n(d))}{n}$ exists. Since $e^x$ is a well defined function for all $x$, we know that the limit $\lim_{n\rightarrow\infty} exp(\frac{log(c_n(d))}{n}) = \lim_{n\rightarrow\infty} c_n(d)^{1/n}$ exists. 
 
 \section*{3)}
 A first approach for estimating $c_n(2)$ is to generate $N$ random walks in $\mathbb{Z}^2$, and then count the amount of walks $N_{SA}$ that randomly happen to be self-avoiding. To sample random walks $X_i^{0:n}$ we draw 
@@ -63,12 +68,10 @@ All walks are at $n = 0$ assigned equal weights: $\omega_0^i = 1$, $\forall i$, 
 \end{equation}
 where $z_n(X_i^{0:n})$ is an indicator function with value $1$ if the walk if self-avoiding or $0$ otherwise.
 
-When the weights are updated two things can happen: either the walk has collided with itself and the weight is set to $0$, or the walk continues to be self-avoiding and is divided by the probability density. Therefore, the weights are either $\omega_n^i = (2d)^n$ or zero.
+When the weights are updated two things can happen: either the walk has collided with itself and the weight is set to $0$, or the walk continues to be self-avoiding and is divided by the probability density. Therefore, the weights are either $\omega_n^i = (2d)^n$ or zero. Because of this it's possible to write:
 
-From this, we can then find approximations of $c_n(d)$ by simulating N walks and then finding the mean of all weights, since this amounts to:
 \begin{equation}
-    \label{eq:cn}
-    c_n(d) = (2d)^n*\frac{N_{SA}}{N} = \sum_{i = 1}^N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}
+   \frac{1}{N}\sum_{i=1}^N\omega_n^i = (2d)^n \frac{N_{SA}}{N} = \tilde{c}_n(d)
 \end{equation}
 
 Using $N = 10^4$ approximations of $c_n(2)$ are presented in table \ref{tab:random_walks_results}.
@@ -84,17 +87,14 @@ In table \ref{tab:random_walks_results} we can see that as $n$ increases, our es
 
 \section*{4)}
 
-To ensure that more sampled walks are self-avoiding, we can can update the distribution $g_{n+1}(x_{n+1}|X^{0:n})$ to only select neighbouring points that the walk has not visited before. By avoiding "uninteresting" walks, we can focus the computational power on the walks that are self-avoiding, increasing the ratio $N_{SA}/N$. We can then estimate $c_n(d)$ as:
-\begin{equation}
-    c_n(d) = \frac{N_{SA}}{N} * ((2d)^n - \text{"Uninteresting walks"})
-\end{equation}
+To ensure that more sampled walks are self-avoiding, we can can update the distribution $g_{n+1}(x_{n+1}|X^{0:n})$ to only select neighbouring points that the walk has not visited before. By avoiding colliding walks, we can focus the computational power on the walks that are self-avoiding, increasing the ratio $N_{SA}/N$. 
 
-For each particle, new weights are calculated with (\ref{eq:weights}). If $X^{0:n}$ don't have any possible neighbours, $X^{n+1}$ will result in a probability of zero and the corresponding weight for that particle will also be zero, killing the particle.
+For each particle, new weights are calculated with (\ref{eq:weights}). If $X_i^{0:n}$ don't have any possible neighbours, $X_i^{n+1}$ will result in a probability of zero and the corresponding weight for that particle will also be zero.
 
-By using this approach, more of the sampled walks will be self-avoiding, making the ratio $N_{SA}/N$ larger. However, the weights will on average be smaller than the weights in task 3 since the probability density of $g_{n+1}(x_{n+1}|X^{0:n})$ is larger. Therefore $c_n(d)$ can still be calculated as:
+By using this approach, more of the sampled walks will be self-avoiding, making the ratio $N_{SA}/N$ larger. However, the weights will on average be smaller than the weights in task 3 since the probability density of $g_{n+1}(x_{n+1}|X^{0:n})$ is larger. Therefore $c_n(d)$ can still be approximated as:
 
 \begin{equation}
-    c_n(d) = \frac{N_{SA}}{N} * ((2d)^n - \text{"Uninteresting walks"}) = \sum_{i = 1}^N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}
+    \tilde{c}_n(d) = \frac{1}{N}\sum_{i=1}^N\omega_n^i
 \end{equation}
 
 Using $N = 10^4$ approximations of $c_n(2)$ are presented in table \ref{tab:self_avoiding_results}.
