@@ -80,12 +80,11 @@ Using $N = 10^4$ approximations of $c_n(2)$ are presented in table \ref{tab:rand
     \include{tables/random_walk_results}
 \end{table}
 
-\section*{4)}
 In table \ref{tab:random_walks_results} we can see that as $n$ increases, our estimates get worse. For large n, we can no longer estimate $c_n(2)$ as the probability of producing a self-avoiding walk randomly approaches zero. Instead, we need to find a method of increasing the probability of sampling a self-avoiding random walk.
 
 \section*{4)}
 
-To ensure that more sampled walks are self-avoiding, we can can update the distribution $g_{n+1}(x_{n+1}|X^{0:n})$ to only select neighbouring points that the walk has not visited before. By avoiding "uninteresting" walks, we can focus the computational power on the walks that are self-avoiding, increasing the quotient $N_{SA}/N$. We can then estimate $c_n(d)$ as:
+To ensure that more sampled walks are self-avoiding, we can can update the distribution $g_{n+1}(x_{n+1}|X^{0:n})$ to only select neighbouring points that the walk has not visited before. By avoiding "uninteresting" walks, we can focus the computational power on the walks that are self-avoiding, increasing the ratio $N_{SA}/N$. We can then estimate $c_n(d)$ as:
 \begin{equation}
     c_n(d) = \frac{N_{SA}}{N} * ((2d)^n - \text{"Uninteresting walks"})
 \end{equation}
@@ -127,17 +126,6 @@ By taking the logarithm of (\ref{eq:cd}) when $d=2$ the following equation is de
 \end{equation}
 
 Rewriting (\ref{eq:ln_cn}) on matrix form yields:
-
-
-Using $N = 10^4$ approximations of $c_n(2)$ are presented in table \ref{tab:resampling_results}.
-
-\begin{table}[H]
-    \centering
-    \caption{Approximations of $c_n(2)$ for different n, with a $95\%$ confidence interval by sampling random walks.}
-    \label{tab:resampling_results}
-    \include{tables/resampling_results}
-\end{table}
-
 \section*{7)}
 
 To find a bound for $\mu_d$ we can use the following equation:
