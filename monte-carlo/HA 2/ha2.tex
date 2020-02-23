@@ -30,7 +30,7 @@
 \section*{1)}
 
 All possible Self Avoiding Walks (SAW), $S_{n+m}(d)$, could be constructed by combining n-step SAWs with m-step SAWs, but all of these combination are not certain to
- be self avoiding and thus is
+ be self avoiding and thus:
 
 \begin{equation}
     \label{eq:multiplicity}
@@ -83,13 +83,13 @@ Using $N = 10^4$ approximations of $c_n(2)$ are presented in table \ref{tab:rand
     \include{tables/random_walk_results}
 \end{table}
 
-In table \ref{tab:random_walks_results} we can see that as $n$ increases, our estimates get worse. For large n, we can no longer estimate $c_n(2)$ as the probability of producing a self-avoiding walk randomly approaches zero. Instead, we need to find a method of increasing the probability of sampling a self-avoiding random walk.
+In table \ref{tab:random_walks_results} we can see that as $n$ increases, our estimates get worse. For large n, we can no longer estimate $c_n(2)$ as the probability of randomly producing a self-avoiding walk approaches zero. Instead, we need to find a method of increasing the probability of sampling a self-avoiding random walk.
 
 \section*{4)}
 
-To ensure that more sampled walks are self-avoiding, we can can update the distribution $g_{n+1}(x_{n+1}|X^{0:n})$ to only select neighbouring points that the walk has not visited before. By avoiding colliding walks, we can focus the computational power on the walks that are self-avoiding, increasing the ratio $N_{SA}/N$. 
+To ensure that more of the sampled walks are self-avoiding, we can can update the distribution $g_{n+1}(x_{n+1}|X^{0:n})$ to only select neighbouring points that the walk has not visited before. By avoiding colliding walks, we can focus the computational power on the walks that are self-avoiding, increasing the ratio $N_{SA}/N$. 
 
-For each particle, new weights are calculated with (\ref{eq:weights}). If $X_i^{0:n}$ don't have any possible neighbours, $X_i^{n+1}$ will result in a probability of zero and the corresponding weight for that particle will also be zero.
+For each particle, new weights are calculated with (\ref{eq:weights}). If $X_i^{0:n}$ don't have any possible neighbours, $X_i^{n+1}$ will result in a probability of zero and the corresponding weight for that particle will then be set to zero.
 
 By using this approach, more of the sampled walks will be self-avoiding, making the ratio $N_{SA}/N$ larger. However, the weights will on average be smaller than the weights in task 3 since the probability density of $g_{n+1}(x_{n+1}|X^{0:n})$ is larger. Therefore $c_n(d)$ can still be approximated as:
 
@@ -113,8 +113,6 @@ When using resampling it can be proved\footnote{From page 23 of the slides for l
 \begin{equation}
     c_n(d) = \prod_{k = 0}^n(\frac{1}{N}\sum_{i=1}^N\omega_k^i)
 \end{equation}
-
-For each particle, new weights is calculated with (\ref{eq:weights}). If $X^{n}$ don't have any possible neighbours, $X^{n+1}$ is selected as $X^n$, this will result in a probability of zero and that the corresponding weight for that particle will be zero, killing the particle.
 
 This approach will give better estimates of $c_n(d)$ for large n compared to the previous section. However, the variance will be slightly higher due to the randomness introduced in the resampling.
 
