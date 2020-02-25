@@ -39,7 +39,9 @@ To estimate the default probability using the Merton Model we need to gather his
     \item The risk-free rate
 \end{itemize}
 
-In simple terms, the Merton model assumes that the face value of debt is treated as a zero-coupon bond with a duration of one year. The shareholder payoff can then be seen as a call option on the firm's asset value at time $T$, with a strike price of the face value of the debt. Therefore we can use the Black \& Scholes model
+In simple terms, the Merton model assumes that the face value of debt is treated as a zero-coupon bond with a duration of one year. The shareholder payoff can then be seen as a call option on the firm's asset value at time $T$, with a strike price of the face value of the debt. The price for this call option would then be equal to the firm's equity. Therefore we can use the Black-Scholes model "in reverse" to find the market value of the firms assets. From there, we can find the probability of default as the probability that the debt is higher than the asset value. We can also express the probability as the distance to default, i.e the amount of standard deviations on the asset values needed to reach default.
+
+Finally, we use these results to look at the implied credit spread of the firm compared to the yearly risk free rate for the period.
 
 \section{Results}
 
