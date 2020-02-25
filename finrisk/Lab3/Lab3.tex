@@ -29,8 +29,17 @@
 \maketitle
 
 \section{Introduction}
+In this exercise we will implement the Merton model to estimate the default probabilities of a single firm, i.e the probability that the firm will default in the next coming 12 months. For this exercise we will look at the firm Ericsson for five different months during the period 1999-2001, a period with high volatility in the tech industry.
 
 \section{Method}
+To estimate the default probability using the Merton Model we need to gather historical data about the firm and market conditions. The data we need is:
+\begin{itemize}
+    \item Stock prices and the number of outstanding shares
+    \item Face value of debt
+    \item The risk-free rate
+\end{itemize}
+
+In simple terms, the Merton model assumes that the face value of debt is treated as a zero-coupon bond with a duration of one year. The shareholder payoff can then be seen as a call option on the firm's asset value at time $T$, with a strike price of the face value of the debt. Therefore we can use the Black \& Scholes model
 
 \section{Results}
 
