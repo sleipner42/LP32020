@@ -1,0 +1,92 @@
+\documentclass[a4paper]{article}
+
+\usepackage[T1]{fontenc}	
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+
+\pagestyle{fancy}
+\rhead{Home Assignment 3}
+\lhead{Noah Hansson \& Kristoffer Nordström}
+
+\title{Home Assignment 3 - FMSN50}
+\author{Kristoffer Nordström, Noah Hansson}\author{Kristoffer Nordström \\ kr8245no-s@student.lu.se \and  Noah Hansson \\ no3822ha-s@student.lu.se}
+\date{\today}
+
+
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}
+\setlength{\floatsep}{6pt plus 1.0pt minus 2.0pt}
+\setlength{\textfloatsep}{10pt plus 1.0pt minus 2.0pt}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section*{Coal mine disasters - Constructing a complex MCMC algorithm}
+
+\subsection*{1)}
+We are given that:
+\begin{equation}
+    \label{eq:interior}
+    f(\tau | \lambda, t) = exp(-\sum_{i=1}^d\lambda_i(t_{i+1}-t_i))\prod_{i=1}^d\lambda_i^{n_i(\tau)}
+\end{equation}
+and that the breakpoints t has a prior:
+\begin{equation}
+    \label{eq:t_prior}
+    f(t) \propto 
+    \begin{cases}
+    \prod_{i=1}^d(t_{i+1}-t_i), \quad for \quad t_1 < t_2 < ... < t_d < t_{d+1} \\
+    0, \quad otherwise
+    \end{cases}
+\end{equation}
+We also put a Gamma(2, $\theta$)-prior on $f(\lambda)$ where $\theta$ has a Gamma(2,$\Psi$)-prior where $\Psi$ is a fixed hyperparameter.
+
+We are interested in finding the marginal posterior distributions $f(\lambda|\theta, t, \tau)$, $f(\theta | \lambda, t, \tau)$ and $f(t |\theta, \lambda, \tau)$ up to a normalising constant.
+
+First, we calculate the posterior $f(\lambda, \theta, t | \tau)$ using Bayes' formula:
+\begin{equation}
+    f(\lambda, \theta, t | \tau) \propto f(\tau | \lambda, \theta, t)f(\lambda, \theta, t)
+\end{equation}
+
+For the marginal posterior $f(\lambda|\theta, t, \tau)$ we can now condition the posterior and prior on $\theta$ and $t$, which gives us:
+\begin{equation}
+    f(\lambda|\theta, t, \tau) \propto f(\tau | \lambda, \theta, t)f(\lambda | \theta, t)
+\end{equation}
+Using Bayes' formula again we now get:
+\begin{equation}
+    f(\lambda|\theta, t, \tau) \propto f(\tau | \lambda, \theta, t)f(\lambda | \theta, t) \propto f(\tau | \lambda, \theta, t)f(\theta, t |\lambda)f(\lambda)
+\end{equation}
+Since $t$ is independent from $\lambda$ and $\theta$ we can further simplify this as:
+\begin{equation}
+    f(\lambda|\theta, t, \tau) \propto f(\tau | \lambda, \theta, t)f(\theta|\lambda)f(t)f(\lambda)
+\end{equation}
+Finally, we again use Bayes' formula to simplify $f(\theta|\lambda)$ to get:
+\begin{equation}
+    f(\lambda|\theta, t, \tau) \propto f(\tau | \lambda, \theta, t)f(\theta|\lambda)f(t)f(\lambda) \propto f(\tau | \lambda, \theta, t)f(\lambda|\theta)f(\theta)f(t)f(\lambda)
+\end{equation}
+Inserting (\ref{eq:interior}), (\ref{eq:t_prior}) and the priors for $\theta$ and $\lambda$ we now get:
+\begin{equation}
+    f(\lambda|\theta, t, \tau) \propto \begin{cases}
+        \exp(-\sum_{i=1}^d\lambda_i(t_{i+1}-t_i))\prod_{i=1}^d\lambda_i^{n_i(\tau)}\prod_{i=1}^d(t_{i+1}-t_i)(\frac{\theta^2}{\Gamma(2)}\lambda \exp(-\theta\lambda))^2\frac{\Psi^2}{\Gamma(2)}\theta\exp(-\Psi\theta) \\
+        0, \quad otherwise
+    \end{cases} 
+\end{equation}
+Which can be simplified to:
+\begin{equation}
+    f(\lambda|\theta, t, \tau) \propto \begin{cases}
+        \exp(-\sum_{i=1}^d\lambda_i(t_{i+1}-t_i))\prod_{i=1}^d(\lambda_i^{n_i(\tau)}(t_{i+1}-t_i))\frac{\theta^4\Psi^2}{\Gamma(2)^3}\lambda^2\theta \exp(-\theta(2\lambda - \Psi)) \\
+        0, \quad otherwise
+    \end{cases}
+\end{equation}
+
+\newpage
+
+\section{Parametric bootstrap for the 100-year Atlantic wave}
+
+
+\end{document}
