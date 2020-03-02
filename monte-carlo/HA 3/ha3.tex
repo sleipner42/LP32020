@@ -50,6 +50,36 @@ From this, we can find the marginal posterior distributions up to a normalizing 
     \end{cases}
 \end{equation}
 
+From these marginal distributions we can attempt to find a general distribution to sample the variables. For $\lambda$ this gives us:
+\begin{equation}
+    \begin{gathered}
+        f(\lambda | \tau, \theta, t) \propto f(\lambda|\theta)f(\tau|\lambda,\theta) = \\ = \theta^2\lambda\exp(-\theta\lambda-\sum_{i=1}^d(t_{i+1}-t_i))\prod_{t=1}^d\lambda_i^{n_i(\tau)}
+    \end{gathered}
+\end{equation}
+Since lambda is a vector of intensities $\lambda_i$ we can sample each individual lambda as 
+\begin{equation}
+    f(\lambda_i|\theta)f(\tau|\lambda_i,t) = \theta^2\lambda_i^{n_i(\tau)+1}\exp(-\lambda_i(\theta + (t_{i+1}-t_i)))
+\end{equation}
+From this expression we can conclude that the marginal posterior for $\lambda$ is gamma distributed such that:
+\begin{equation}
+    \lambda_i \sim \Gamma(2+n_i(\tau), \theta + (t_{i+1} - t_i))
+\end{equation}
+
+Similarly, for $\theta$:
+\begin{equation}
+    \begin{gathered}
+        f(\theta|, \tau, \lambda, t) \propto f(\theta)f(\lambda|\theta) = f(\theta)\prod_{i=1}^d f(\lambda_i|\theta)= \\
+        = \Psi^2\theta\exp(-\theta\Psi)\prod_{i=1}^d(\theta^2\lambda_i\exp(-\lambda_i\theta)) = \\
+        = \Psi^2\theta^{2d+1}\exp(-\theta(\Psi+\sum_{i=1}^d\lambda_i))\prod_{i=1}^d\lambda_i
+    \end{gathered}
+\end{equation}
+Here we can conclude that the marginal posterior for $\theta$ is gamma distributed such that:
+\begin{equation}
+    \theta \sim \Gamma(2+2d, \Psi+\sum_{i=1}^d\lambda_i)
+\end{equation}
+
+Unfortunately the marginal distribution of $t$ cannot be sampled from a known distribution. This is why we need a hybrid MCMC sampler to sample from the posterior. The hybrid sampler can use the Gibbs algorithm for $\theta$ and $\lambda$ since they can be sampled from, but we will need to use the Metropolis Hastings algorithm for $t$.
+
 \newpage
 
 \section{Parametric bootstrap for the 100-year Atlantic wave}
