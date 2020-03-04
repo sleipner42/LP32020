@@ -154,7 +154,21 @@ When sampling $\lambda$ the prior distribution is  $\lambda \sim \Gamma(2,\theta
 Here we can see that as $\Psi$ increases $\theta$ decreases. However, this does not seem to have a significant effect on $\lambda$, as the mean and variance seems rather constant.
 
 \subsection*{e) Dependance on proposal parameter $\rho$}
-Another parameter specified when initiating the algorithm is the parameter $\rho$ which is used in the proposal kernel for $t$ (see equation (\ref{eq:proposal_kernel})). The parameter can be interpreted as a coefficient in the step length of the random walk proposal. If $\rho$ is large the proposal on average takes larger steps compared to when $\rho$ is small. A large $\rho$ results in faster movement and better mixing in the chain estimating $t$, but with smaller acceptance rates. A small $\rho$ gives slow movement and worse mixing, but higher acceptance rate. In figure XX we simulate the algorithm for different $\rho$ and plot the acceptance rates and the mixing.
+Another parameter specified when initiating the algorithm is the parameter $\rho$ which is used in the proposal kernel for $t$ (see equation (\ref{eq:proposal_kernel})). The parameter can be interpreted as a coefficient in the step length of the random walk proposal. If $\rho$ is large the proposal on average takes larger steps compared to when $\rho$ is small. A large $\rho$ results in faster movement and better mixing in the chain estimating $t$, but with smaller acceptance rates. A small $\rho$ gives slow movement and worse mixing, but higher acceptance rate. In figure \ref{acf} we simulate the algorithm for different $\rho$ and plot the acceptance rates and the mixing.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{images/accept_rho.png} 
+    \caption{Acceptance rate for $\rho$ between 0.001 and 0.1}
+    \label{fig:accept_rho}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{images/ACF.png} 
+    \caption{ACF for t given different values of $\rho$}
+    \label{fig:acf}
+\end{figure}
 
 \newpage
 
