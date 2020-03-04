@@ -7,6 +7,8 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
 \usepackage[margin=1in]{geometry}
 
 \pagestyle{fancy}
@@ -91,14 +93,43 @@ Unfortunately the marginal distribution of $t$ cannot be sampled from a known di
 \subsection*{2)}
 
 To sample from $f(\lambda, \theta, t | \tau)$ we need to construct a hybrid MCMC sampler using both the Gibbs sampler and the Metropolis-Hastings algorithm. We begin by sampling a random number $\theta$ from its prior distribution, and then sample the random vector \textbf{$\lambda$} from its prior distribution depending on $\theta$. We also create breakpoints $t$ spaced evenly in the interval [1658, 1980]. Then the algorithm loops through following steps:
-\begin{enumerate}
-    \item Sample $\theta_{k+1}$ from $f(\theta|\tau, \lambda_k, t_k)$
-    \item Sample $\lambda_{k+1}$ from $f(\lambda|\tau, \theta_{k+1}, t_k)$
-    \item Propose $t_{k+1}$ from a random walk proposal
-    \item Accept or reject $t_{k+1}$
-\end{enumerate}
 
-Here we use a random walk proposal for the breakpoints $t$.
+\begin{algorithm}
+    \caption{Pseudocode of the hybrid MCMC sampler where M is the number of samples plus burn-in samples, and d is the number of breakpoints.}
+    \begin{algorithmic}
+        \For{$k = 1:M$}
+        \State Sample $\theta_{k+1}$ from $f(\theta|\tau, \lambda_k, t_k)$
+        \State Sample $\lambda_{k+1}$ from $f(\lambda|\tau, \theta_{k+1}, t_k)$
+        \For{$i = 1:d$}
+        \State Propose $t_{k+1}^i$ from a random walk proposal
+        \State Accept or reject $t_{k+1}^i$
+        \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+Since we cannot find a known distribution for $t$ we instead need to find a proposal kernel $r(z|x)$ that results in a proper MH sampler. We aim to use a symmtric proposal kernel for $t$, which means that $r(z|x) = r(x|z)$. In this case we use the random walk proposal:
+\begin{gather*}
+    t_i^\star = t_i + \epsilon \\
+    \text{with} \\
+    \epsilon \sim U(-R,R) \\
+    \text{and} \\
+    R = \rho(t_{i+1}-t_{i-1})
+\end{gather*}
+
+By using a symmetric proposal we can easily calculate the acceptance probability for the MH step. The MH acceptance probability is calculated as follows:
+\begin{equation}
+    \alpha(x,z) = 1 \wedge \frac{f(z)r(x|z)}{f(x)f(z|x)}
+\end{equation}
+Which when using a symmetric proposal kernel simplifies to
+\begin{equation}
+    \alpha(x,z) = 1 \wedge \frac{f(z)}{f(x)}
+\end{equation}
+Which means that for the random walk proposal of $t$ we get the acceptance probability as
+\begin{equation}
+    \alpha(x,z) = 1 \wedge \frac{f(t^\star | \tau, \lambda, \theta)}{f(t | \tau, \lambda, \theta)} = 1 \wedge \frac{f(t^\star)f(\tau|\lambda,t^\star)}{f(t)f(\tau|\lambda,t)}
+\end{equation}
+which means that we can calculate the acceptance probability from known proability density functions.
 
 \newpage
 
