@@ -199,7 +199,7 @@ Given measurements assumed to belong to a distribution we are interested of find
     \end{algorithmic}
 \end{algorithm}
 
-The resulting confidence interval for the parameters can be seen in table \ref{tab:parameters}.
+The resulting confidence interval for the parameters can be seen in table \ref{tab:parameters} and in figure \ref{fig:bootstrap_res}.
 
 \begin{table}[H]
     \centering
@@ -210,10 +210,12 @@ The resulting confidence interval for the parameters can be seen in table \ref{t
 
 \subsection*{c) Parametric bootstrap of the highest wave}
 
-To calculate the one sided parametric bootstrapped 95\% confidence interval for the 100-year we begin by constructing bootstraps from the estimated parameters $\hat{\mu}$ and $\hat{\beta}$. 
+To calculate the one sided parametric bootstrapped 95\% confidence interval for the 100-year we begin by constructing bootstraps as in b), and then estimate the 100-year wave for each set of bootstrap parameter estimates.
+
+The resulting confidence interval for the 100-year wave can be seen in table \ref{tab:bigwave} and in figure \ref{fig:bootstrap_res}.
 
 \begin{algorithm}
-    \caption{Pseudocode of the paremetric bootstrap the 100-year wave. T = 3*14*100 = }
+    \caption{Pseudocode of the paremetric bootstrap the 100-year wave. T = 3*14*100 = 4200}
     \begin{algorithmic}
         \State Estimate parameters $\hat{\mu}$ and $\hat{\beta}$ from the given data
         \For{i = 1:N}
@@ -227,12 +229,6 @@ To calculate the one sided parametric bootstrapped 95\% confidence interval for 
     \end{algorithmic}
 \end{algorithm}
 
-\begin{itemize}
-    \item $10^5$ sets of parameters was generated in the same way as in task a).
-    \item $F(1-1/T; \mu, \beta)$ was calculated for each set of parameters, were $T = 3*14*100$.
-    \item The one-sided upper quantile was calculated.
-\end{itemize}
-
 \begin{table}[H]
     \centering
     \caption{Estimated mean of the 100-year way and bootstrapped one sided 95\% confidence interaval}
@@ -244,9 +240,9 @@ To calculate the one sided parametric bootstrapped 95\% confidence interval for 
     \centering
     \includegraphics[width = 1.0\textwidth]{images/results_bootstrap.png}
     \caption{Densities over bootstraped parameters $\beta$ and $\mu$, }
-    \label{}
+    \label{fig:bootstrap_res}
 \end{figure}
 
-The resulting one-sided 95\% confidence interval for the 100-year wave is 17.24 w. The reason that we are interested in the upper quantile is that we want to get the worst scenario, by doing this, it's possible to say that the 100-year wave will with 95\% probability not be greater than 17.24 m. 
+The resulting one-sided 95\% confidence interval for the 100-year wave is 17.24 m. The reason that we are interested in the upper quantile is that we want to get the worst scenario, by doing this, it's possible to say that the 100-year wave will with 95\% probability not be greater than 17.24 m. 
 
 \end{document}
