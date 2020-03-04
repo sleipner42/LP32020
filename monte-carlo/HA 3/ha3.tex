@@ -103,13 +103,17 @@ To sample from $f(\lambda, \theta, t | \tau)$ we need to construct a hybrid MCMC
 \end{algorithm}
 
 Since we cannot find a known distribution for $t$ we instead need to find a proposal kernel $r(z|x)$ that results in a proper MH sampler. We aim to use a symmtric proposal kernel for $t$, which means that $r(z|x) = r(x|z)$. In this case we use the random walk proposal:
-\begin{gather*}
-    t_i^\star = t_i + \epsilon \\
-    \text{with} \\
-    \epsilon \sim U(-R,R) \\
-    \text{and} \\
-    R = \rho(t_{i+1}-t_{i-1})
-\end{gather*}
+
+\begin{equation}
+    \label{eq:proposal_kernel}
+    \begin{gathered}
+        t_i^\star = t_i + \epsilon \\
+        \text{with} \\
+        \epsilon \sim U(-R,R) \\
+        \text{and} \\
+        R = \rho(t_{i+1}-t_{i-1})
+    \end{gathered}
+\end{equation}
 
 By using a symmetric proposal we can easily calculate the acceptance probability for the MH step. The MH acceptance probability is calculated as follows:
 \begin{equation}
@@ -138,13 +142,25 @@ We proceed by running the simulation for different amount of breakpoints to how 
 As seen in figure \ref{fig:num_breakpoints_results} the algorithm manages to converge rather fast towards the true values. As the number of breakpoints increase, we note that the chains start to jump more. This is due to the strong dependencies between the breakpoints. If one breakpoint struggles to converge or has a large variance, it effects the variance and sampling of the other breakpoints. As the number of breakpoints increase the variance and amount of jumps also increases.
 
 \subsection*{d) Dependance on hyperparameter $\Psi$}
-When sampling $\lambda$ the prior distribution is  $\lambda \sim \Gamma(2,\theta)$, where $\theta \sim \Gamma(2,\Psi)$. The parameter $\Psi$ is a hyperparameter specified when initiating the algorithm. Here we will try to estimate the parameters $\theta$ and $\lambda$ for different choices of $\Psi$ and see how the parameter choice effects the process parameters. The results are presented in figure XXX
+When sampling $\lambda$ the prior distribution is  $\lambda \sim \Gamma(2,\theta)$, where $\theta \sim \Gamma(2,\Psi)$. The parameter $\Psi$ is a hyperparameter specified when initiating the algorithm. Here we will try to estimate the parameters $\theta$ and $\lambda$ for different choices of $\Psi$ and see how the parameter choice effects the process parameters. The results are presented in figure \ref{fig:different_psi}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{images/psi.png} 
+    \caption{Mean and variance of $\theta$ and $\lambda$ as a function of hyperparameter $\Psi$. Here we are simulating $10 000$ samples with 3 breakpoints and $\rho = 0.025$}
+    \label{fig:different_psi}
+\end{figure}
+
+Here we can see that as $\Psi$ increases $\theta$ decreases. However, this does not seem to have a significant effect on $\lambda$, as the mean and variance seems rather constant.
+
+\subsection*{e) Dependance on proposal parameter $\rho$}
+Another parameter specified when initiating the algorithm is the parameter $\rho$ which is used in the proposal kernel for $t$ (see equation (\ref{eq:proposal_kernel})). The parameter can be interpreted as a coefficient in the step length of the random walk proposal. If $\rho$ is large the proposal on average takes larger steps compared to when $\rho$ is small. A large $\rho$ results in faster movement and better mixing in the chain estimating $t$, but with smaller acceptance rates. A small $\rho$ gives slow movement and worse mixing, but higher acceptance rate. In figure XX we simulate the algorithm for different $\rho$ and plot the acceptance rates and the mixing.
 
 \newpage
 
 \section{Parametric bootstrap for the 100-year Atlantic wave}
 
-\subsection*{a)}
+\subsection*{a) Finding the inverse of the Gumbal distribution}
 
 The Gumbal distribution has the following cumulative distribution function
 
@@ -153,25 +169,37 @@ The Gumbal distribution has the following cumulative distribution function
     \label{eq:gumbel}
 \end{equation}
 
-The inverse of (\ref{eq:gumbel}) is calculated as below
+For a uniformly distributed variable $u \in [0,1]$ we calculate the inverse as:
 
 \begin{equation}
-    F^{-1}(u; \mu, \beta) = \mu - \beta*\ln(-\ln(u))
     \label{eq:inv_gumbel}
+    \begin{gathered}
+        F(F^{-1}(u;\mu, \beta)) = u \iff \exp(-\exp(\frac{F^{-1}(u;\mu,\beta)-\mu}{\beta})) = u \\
+        \iff \\
+        F^{-1}(u; \mu, \beta) = \mu - \beta*\ln(-\ln(u)) 
+    \end{gathered}
 \end{equation}
 
-\subsection*{b)}
 
-To calculate the parametric bootstraped 95\% confidence interval for the parameters the following steps was taken:
+\subsection*{b) Parametric bootstrap of parameter estimates}
 
-\begin{itemize}
-    \item The historical data was loaded from the provided text file.
-    \item Parameters, $\mu$ and $\beta$, was estimated with help of est\_gumbel.m.
-    \item $10^5$ series, each containing 568 samples each, was generated with the help of (\ref{eq:inv_gumbel}).
-    \item For each serie, new parameters was estimated and 95\% confidence intervall was calculated by looking at the quantiles.
-\end{itemize}
+Given measurements assumed to belong to a distribution we are interested of finding a confidence interval of the estimated parameters. In this case, we are given measurements of wave heights that we assume are distributed from a Gumbel distribution. To find the confidence interval we then use a parametric bootstrap to find the variance of the parameters. To get a confidence interval the bootstrap is conducted as follows:
 
-The resulting confidence intervall for the parameters can be seen in table \ref{tab:parameters}.
+\begin{algorithm}
+    \caption{Pseudocode of the paremetric bootstrap of parameter estimates}
+    \begin{algorithmic}
+        \State Estimate parameters $\hat{\mu}$ and $\hat{\beta}$ from the given data
+        \For{i = 1:N}
+        \State Simulate bootstrap $B_i \sim Gumbel(\hat{\mu}, \hat{\beta})$
+        \State Estimate parameters $\mu_{B_i}$ and $\beta_{B_i}$
+        \State Find bootstrap error $\Delta_i = [\hat{\mu_{B_i}}, \hat{\beta_{B_i}}] - [\hat{\mu}, \hat{\beta}]$
+        \EndFor
+        \State Find $0.025$ and $0.975$ quantiles of $\Delta$
+        \State Create confidence intervals using quantiles of $\Delta$ and estimated parameters $\hat{\mu}$ and $\hat{\beta}$
+    \end{algorithmic}
+\end{algorithm}
+
+The resulting confidence interval for the parameters can be seen in table \ref{tab:parameters}.
 
 \begin{table}[H]
     \centering
@@ -180,9 +208,24 @@ The resulting confidence intervall for the parameters can be seen in table \ref{
     \include{tables/parameters}
 \end{table}
 
-\subsection*{c)}
+\subsection*{c) Parametric bootstrap of the highest wave}
 
-To calculate the one sided parametric bootstrapped 95\% confidence interval for the 100-year return value the following steps was taken:
+To calculate the one sided parametric bootstrapped 95\% confidence interval for the 100-year we begin by constructing bootstraps from the estimated parameters $\hat{\mu}$ and $\hat{\beta}$. 
+
+\begin{algorithm}
+    \caption{Pseudocode of the paremetric bootstrap the 100-year wave. T = 3*14*100 = }
+    \begin{algorithmic}
+        \State Estimate parameters $\hat{\mu}$ and $\hat{\beta}$ from the given data
+        \For{i = 1:N}
+        \State Simulate bootstrap $B_i \sim Gumbel(\hat{\mu}, \hat{\beta})$
+        \State Estimate parameters $\mu_{B_i}$ and $\beta_{B_i}$
+        \State Evaluate $F(1-1/T; \hat{\mu_{B_i}}, \hat{\beta_{B_i}})$
+        \State Find bootstrap error $\Delta_i = F(1-1/T; \hat{\mu}, \hat{\beta}) - F(1-1/T; \hat{\mu_{B_i}}, \hat{\beta_{B_i}})$
+        \EndFor
+        \State Find $0.95$ quantile of $\Delta$
+        \State Create one-sided confidence interval using the quantile of $\Delta$ and the estimate $F(1-1/T; \hat{\mu}, \hat{\beta})$
+    \end{algorithmic}
+\end{algorithm}
 
 \begin{itemize}
     \item $10^5$ sets of parameters was generated in the same way as in task a).
