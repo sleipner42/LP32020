@@ -32,7 +32,7 @@
 \section*{Coal mine disasters - Constructing a complex MCMC algorithm}
 
 
-\subsection*{a)}
+\subsection*{a) Posterior probabilities}
 We are interested in sampling from the posterior distribution $f(\lambda, \theta, t | \tau)$ using a hybrid MCMC algorithm. To do this, we must first find the marginal posterior distributions:
 \begin{itemize}
     \item $f(\theta | \tau, \lambda, t)$
@@ -84,7 +84,7 @@ Here we can conclude that the marginal posterior for $\theta$ is gamma distribut
 Unfortunately the marginal distribution of $t$ cannot be sampled from a known distribution. This is why we need a hybrid MCMC sampler to sample from the posterior. The hybrid sampler can use the Gibbs algorithm for $\theta$ and $\lambda$ since they can be sampled from, but we will need to use the Metropolis Hastings algorithm for $t$.
 
 
-\subsection*{b)}
+\subsection*{b) The hybrid MCMC algorithm}
 
 To sample from $f(\lambda, \theta, t | \tau)$ we need to construct a hybrid MCMC sampler using both the Gibbs sampler and the Metropolis-Hastings algorithm. We begin by sampling a random number $\theta$ from its prior distribution, and then sample the random vector \textbf{$\lambda$} from its prior distribution depending on $\theta$. We also create breakpoints $t$ spaced evenly in the interval [1658, 1980]. Then the algorithm loops through following steps:
 
@@ -124,14 +124,21 @@ Which means that for the random walk proposal of $t$ we get the acceptance proba
     \alpha(x,z) = 1 \wedge \frac{f(t^\star | \tau, \lambda, \theta)}{f(t | \tau, \lambda, \theta)} = 1 \wedge \frac{f(t^\star)f(\tau|\lambda,t^\star)}{f(t)f(\tau|\lambda,t)}
 \end{equation}
 which means that we can calculate the acceptance probability from known proability density functions.
-\subsection*{c)}
+\subsection*{c) Results for different amounts of break points}
+
+We proceed by running the simulation for different amount of breakpoints to how the behaviour of the chain varies. The results are plotted in figure \ref{fig:num_breakpoints_results} and the final intensities are shown in table XXX
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 1.0\textwidth]{images/chain_behavior.png} 
-    \caption{}
-    \label{}
+    \caption{Behaviour of the Markov Chain for the breakpoints and intensities, as well as the final breakpoints, for 1 to 4 breakpoints. The sample size is 10 000 with a burn in size of 1000 samples. $\Psi$ is set to $20$ and $\rho$ is set to $0.025$. The acceptance rates are on average XX \%}
+    \label{fig:num_breakpoints_results}
 \end{figure}
+
+As seen in figure \ref{fig:num_breakpoints_results} the algorithm manages to converge rather fast towards the true values. As the number of breakpoints increase, we note that the chains start to jump more. This is due to the strong dependencies between the breakpoints. If one breakpoint struggles to converge or has a large variance, it effects the variance and sampling of the other breakpoints. As the number of breakpoints increase the variance and amount of jumps also increases.
+
+\subsection*{d) Dependance on hyperparameter $\Psi$}
+When sampling $\lambda$ the prior distribution is  $\lambda \sim \Gamma(2,\theta)$, where $\theta \sim \Gamma(2,\Psi)$. The parameter $\Psi$ is a hyperparameter specified when initiating the algorithm. Here we will try to estimate the parameters $\theta$ and $\lambda$ for different choices of $\Psi$ and see how the parameter choice effects the process parameters. The results are presented in figure XXX
 
 \newpage
 
