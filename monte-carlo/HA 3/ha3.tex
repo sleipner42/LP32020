@@ -120,21 +120,42 @@ To calculate the parametric bootstraped 95\% confidence interval for the paramet
 \begin{itemize}
     \item The historical data was loaded from the provided text file.
     \item Parameters, $\mu$ and $\beta$, was estimated with help of est\_gumbel.m.
-    \item $10^4$ series, each containing 568 samples each, was generated with the help of (\ref{eq:inv_gumbel}).
+    \item $10^5$ series, each containing 568 samples each, was generated with the help of (\ref{eq:inv_gumbel}).
     \item For each serie, new parameters was estimated and 95\% confidence intervall was calculated by looking at the quantiles.
 \end{itemize}
 
-The resulting confidence intervall for the parameters can be seen in table (REF TILL TABLE)
+The resulting confidence intervall for the parameters can be seen in table \ref{tab:parameters}.
+
+\begin{table}[H]
+    \centering
+    \caption{Estimated parameters with 95\% bootstrapped confidence intervals.}
+    \label{tab:parameters}
+    \include{tables/parameters}
+\end{table}
 
 \subsection*{c)}
 
 To calculate the one sided parametric bootstrapped 95\% confidence interval for the 100-year return value the following steps was taken:
 
 \begin{itemize}
-    \item $10^4$ sets of parameters was generated in the same way as in task a).
+    \item $10^5$ sets of parameters was generated in the same way as in task a).
     \item $F(1-1/T; \mu, \beta)$ was calculated for each set of parameters, were $T = 3*14*100$.
     \item The one-sided upper quantile was calculated.
 \end{itemize}
+
+\begin{table}[H]
+    \centering
+    \caption{Estimated mean of the 100-year way and bootstrapped one sided 95\% confidence interaval}
+    \label{tab:bigwave}
+    \include{tables/bigwave}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{images/results_bootstrap.png}
+    \caption{Densities over bootstraped parameters $\beta$ and $\mu$, }
+    \label{}
+\end{figure}
 
 The resulting one-sided 95\% confidence interval for the 100-year wave is 17.24 m. The reason that we are interested in the upper quantile is that we want to get the worst scenario, by doing this, it's possible to say that the 100-year wave will with 95\% probability not be greater than 17.24 m. 
 
