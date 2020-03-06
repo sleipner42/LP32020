@@ -86,11 +86,14 @@ Unfortunately the marginal distribution of $t$ cannot be sampled from a known di
 
 \subsection*{b) The hybrid MCMC algorithm}
 
-To sample from $f(\lambda, \theta, t | \tau)$ we need to construct a hybrid MCMC sampler using both the Gibbs sampler and the Metropolis-Hastings algorithm. We begin by sampling a random number $\theta$ from its prior distribution, and then sample the random vector \textbf{$\lambda$} from its prior distribution depending on $\theta$. We also create breakpoints $t$ spaced evenly in the interval [1658, 1980]. Then the algorithm loops through following steps:
+To sample from $f(\lambda, \theta, t | \tau)$ we need to construct a hybrid MCMC sampler using both the Gibbs sampler and the Metropolis-Hastings algorithm. A pseudocode outline of the algorithm is presented below:
 
 \begin{algorithm}
     \caption{Pseudocode of the hybrid MCMC sampler where M is the number of samples plus burn-in samples, and d is the number of breakpoints.}
     \begin{algorithmic}
+        \State Initiate $t_1$ evenly spaced in the interval [1658,1980]
+        \State Sample $\theta_1 \sim \Gamma(2,\Psi)$
+        \State Sample $\lambda_1 \sim \Gamma(2,\theta_1)$
         \For{$k = 1:M$}
         \State Sample $\theta_{k+1}$ from $f(\theta|\tau, \lambda_k, t_k)$
         \State Sample $\lambda_{k+1}$ from $f(\lambda|\tau, \theta_{k+1}, t_k)$
@@ -135,11 +138,18 @@ We proceed by running the simulation for different amount of breakpoints to how 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 1.0\textwidth]{images/chain_behavior.png} 
-    \caption{Behaviour of the Markov Chain for the breakpoints and intensities, as well as the final breakpoints, for 1 to 4 breakpoints. The sample size is 10 000 with a burn in size of 1000 samples. $\Psi$ is set to $20$ and $\rho$ is set to $0.025$. The acceptance rates are on average XX \%}
+    \caption{Behaviour of the Markov Chain for the breakpoints and intensities, as well as the final breakpoints, for 1 to 4 breakpoints. The sample size is 10 000 with a burn in size of 1000 samples. $\Psi$ is set to $20$ and $\rho$ is set to $0.025$. The acceptance rates are presented in table \ref{tab:acceptance_rates}}
     \label{fig:num_breakpoints_results}
 \end{figure}
 
-As seen in figure \ref{fig:num_breakpoints_results} the algorithm manages to converge rather fast towards the true values. As the number of breakpoints increase, we note that the chains start to jump more. This is due to the strong dependencies between the breakpoints. If one breakpoint struggles to converge or has a large variance, it effects the variance and sampling of the other breakpoints. As the number of breakpoints increase the variance and amount of jumps also increases.
+\begin{table}
+    \centering
+    \caption{Acceptance probabilities for each simulation presented in figure \ref{fig:num_breakpoints_results}}
+    \label{tab:acceptance_rates}
+    \include{tables/acceptance_rates}
+\end{table}
+
+As seen in figure \ref{fig:num_breakpoints_results} the algorithm manages to converge rather fast towards the true values. As the number of breakpoints increase, we note that the chains start to jump more. This is due to the strong dependencies between the breakpoints. If one breakpoint struggles to converge or has a large variance, it effects the variance and sampling of the other breakpoints. As the number of breakpoints increase the variance and amount of jumps also increases. We also note from table \ref{tab:acceptance_rates} that as the amount of breakpoints increases, the acceptance rates go up. This is probably related to the fact that as the amount of breakpoints increases, the step length for the random walk proposal decreases. The acceptance rates as a function of step length will be explored further in section e).
 
 \subsection*{d) Dependance on hyperparameter $\Psi$}
 When sampling $\lambda$ the prior distribution is  $\lambda \sim \Gamma(2,\theta)$, where $\theta \sim \Gamma(2,\Psi)$. The parameter $\Psi$ is a hyperparameter specified when initiating the algorithm. Here we will try to estimate the parameters $\theta$ and $\lambda$ for different choices of $\Psi$ and see how the parameter choice effects the process parameters. The results are presented in figure \ref{fig:different_psi}.
@@ -154,7 +164,7 @@ When sampling $\lambda$ the prior distribution is  $\lambda \sim \Gamma(2,\theta
 Here we can see that as $\Psi$ increases $\theta$ decreases. However, this does not seem to have a significant effect on $\lambda$, as the mean and variance seems rather constant.
 
 \subsection*{e) Dependance on proposal parameter $\rho$}
-Another parameter specified when initiating the algorithm is the parameter $\rho$ which is used in the proposal kernel for $t$ (see equation (\ref{eq:proposal_kernel})). The parameter can be interpreted as a coefficient in the step length of the random walk proposal. If $\rho$ is large the proposal on average takes larger steps compared to when $\rho$ is small. A large $\rho$ results in faster movement and better mixing in the chain estimating $t$, but with smaller acceptance rates. A small $\rho$ gives slow movement and worse mixing, but higher acceptance rate. In figure \ref{acf} we simulate the algorithm for different $\rho$ and plot the acceptance rates and the mixing.
+Another parameter specified when initiating the algorithm is the parameter $\rho$ which is used in the proposal kernel for $t$ (see equation (\ref{eq:proposal_kernel})). The parameter can be interpreted as a coefficient in the step length of the random walk proposal. If $\rho$ is large the proposal on average takes larger steps compared to when $\rho$ is small. A large $\rho$ results in faster movement and better mixing in the chain estimating $t$, but with smaller acceptance rates. A small $\rho$ gives slow movement and worse mixing, but higher acceptance rate. To measure the mixing we look at the ACF for the sampled breakpoints. Fast mixing implies that the ACF decreases fast, while slow mixing gives autocorrelation for many iterations. In figure \ref{fig:accept_rho} we simulate the algorithm for different $\rho$ and plot the acceptance rates, and in figure \ref{fig:acf} we plot the ACF for the sampled breakpoints. For the following attempts we use $10 000$ samples and $\Psi = 20$.
 
 \begin{figure}[H]
     \centering
@@ -190,7 +200,7 @@ For a uniformly distributed variable $u \in [0,1]$ we calculate the inverse as:
     \begin{gathered}
         F(F^{-1}(u;\mu, \beta)) = u \iff \exp(-\exp(\frac{F^{-1}(u;\mu,\beta)-\mu}{\beta})) = u \\
         \iff \\
-        F^{-1}(u; \mu, \beta) = \mu - \beta*\ln(-\ln(u)) 
+        F^{-1}(u; \mu, \beta) = \mu - \beta*\ln(-\ln(u)), \quad u\in [0,1]
     \end{gathered}
 \end{equation}
 
@@ -253,10 +263,7 @@ The resulting confidence interval for the 100-year wave can be seen in table \re
 \begin{figure}[H]
     \centering
     \includegraphics[width = 1.0\textwidth]{images/results_bootstrap.png}
-    \caption{Densities over bootstraped parameters $\beta$ and $\mu$, }
+    \caption{Densities over bootstrapped parameters $\beta$ and $\mu$, }
     \label{fig:bootstrap_res}
 \end{figure}
-
-The resulting one-sided 95\% confidence interval for the 100-year wave is 17.24 m. The reason that we are interested in the upper quantile is that we want to get the worst scenario, by doing this, it's possible to say that the 100-year wave will with 95\% probability not be greater than 17.24 m. 
-
 \end{document}
