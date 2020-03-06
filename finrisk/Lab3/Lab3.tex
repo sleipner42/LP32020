@@ -41,11 +41,11 @@ To estimate the default probability using the Merton Model we need to gather his
 
 In simple terms, the Merton model assumes that the face value of debt is treated as a zero-coupon bond with a duration of one year. The shareholder payoff can then be seen as a call option on the firm's asset value at time $T$, with a strike price of the face value of the debt. The price for this call option would then be equal to the firm's equity. Therefore we can use the Black-Scholes model "in reverse" to find the market value of the firms assets. From there, we can find the probability of default as the probability that the debt is higher than the asset value. We can also express the probability as the distance to default, i.e the amount of standard deviations on the asset values needed to reach default.
 
-Finally, we use these results to look at the implied credit spread of the firm compared to the yearly risk free rate for the period.
+Finally, we use these results to look at the implied credit spread of the firm compared to the yearly risk free rate for the period. 
 
 \section{Results}
 
-The results for the calculations can be 
+The results for the calculations are presented in table \ref{tab:result}
 \begin{table}[H]
     \centering
     \caption{The calculated variables for each of the five months}
@@ -54,5 +54,9 @@ The results for the calculations can be
 \end{table}
 
 \section{Conclusion}
+From table \ref{tab:result} we can see that as the volatility $\sigma_E$ and $\sigma_A$ increases the probability of default increases. Another important factor in the probability of default as well as the credit spread is the debt-to equity ratio, or the firms financial leverage. For the months Oct '98 and Ocf '01 we can see thhat the firm has a larger than usial financial leverage $(K/A)$. This is also shown in the high probability of default for those months.
+
+When using the Merton model, one has to be aware of the underlying assumptions that make the model work. For esample, all debt is treated as a one-year zero-coupon bond. In reality, this is not often the case. Furthermore, the Merton model assumes that the probability of default is normal distributed given the distance to default. Other models, like Moody's KMV model make more accurate assumptions by not only looking at an empirical distribution but also looks at historical default data. As a result of these assumptions the Merton model has a tendency to underestimate the probability of default compared to other models. The Merton model also tends to underestimate the implied credit spread. Just like the probability of default, this can be traced to the assumptions that are made in order to get the data needed for the calculations. Since the firm's market value of assets is unknown we need to use tha Black-Scholes model to estimate the value. We also assume that the volatility of the firm's assets is half that of the volatility of the equity. To get better estimates one would either need a more complicated model for approximating data, or have acces to the true values. Still, the simplicity of the Merton model makes it very useful when one needs a rough estimate of credit defaults and valuation.
+
 
 \end{document}
