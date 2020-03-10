@@ -71,7 +71,7 @@ From this expression we can conclude that the marginal posterior for $\lambda$ i
 Similarly, for $\theta$:
 \begin{equation}
     \begin{gathered}
-        f(\theta|, \tau, \lambda, t) \propto f(\theta)f(\lambda|\theta) = f(\theta)\prod_{i=1}^d f(\lambda_i|\theta)= \\
+        f(\theta|\tau, \lambda, t) \propto f(\theta)f(\lambda|\theta) = f(\theta)\prod_{i=1}^d f(\lambda_i|\theta)= \\
         = \Psi^2\theta\exp(-\theta\Psi)\prod_{i=1}^d(\theta^2\lambda_i\exp(-\lambda_i\theta)) = \\
         = \Psi^2\theta^{2d+1}\exp(-\theta(\Psi+\sum_{i=1}^d\lambda_i))\prod_{i=1}^d\lambda_i
     \end{gathered}
@@ -133,7 +133,7 @@ Which means that for the random walk proposal of $t$ we get the acceptance proba
 which means that we can calculate the acceptance probability from known proability density functions.
 \subsection*{c) Results for different amounts of break points}
 
-We proceed by running the simulation for different amount of breakpoints to how the behaviour of the chain varies. The results are plotted in figure \ref{fig:num_breakpoints_results} and the final intensities are shown in table XXX
+We proceed by running the simulation for different amount of breakpoints to how the behaviour of the chain varies. The results are plotted in figure \ref{fig:num_breakpoints_results}.
 
 \begin{figure}[H]
     \centering
@@ -164,7 +164,9 @@ When sampling $\lambda$ the prior distribution is  $\lambda \sim \Gamma(2,\theta
 Here we can see that as $\Psi$ increases $\theta$ decreases. However, this does not seem to have a significant effect on $\lambda$, as the mean and variance seems rather constant.
 
 \subsection*{e) Dependance on proposal parameter $\rho$}
-Another parameter specified when initiating the algorithm is the parameter $\rho$ which is used in the proposal kernel for $t$ (see equation (\ref{eq:proposal_kernel})). The parameter can be interpreted as a coefficient in the step length of the random walk proposal. If $\rho$ is large the proposal on average takes larger steps compared to when $\rho$ is small. A large $\rho$ results in faster movement and better mixing in the chain estimating $t$, but with smaller acceptance rates. A small $\rho$ gives slow movement and worse mixing, but higher acceptance rate. To measure the mixing we look at the ACF for the sampled breakpoints. Fast mixing implies that the ACF decreases fast, while slow mixing gives autocorrelation for many iterations. In figure \ref{fig:accept_rho} we simulate the algorithm for different $\rho$ and plot the acceptance rates, and in figure \ref{fig:acf} we plot the ACF for the sampled breakpoints. For the following attempts we use $10 000$ samples and $\Psi = 20$.
+Another parameter specified when initiating the algorithm is the parameter $\rho$ which is used in the proposal kernel for $t$ (see equation (\ref{eq:proposal_kernel})). The parameter can be interpreted as a coefficient in the step length of the random walk proposal. If $\rho$ is large the proposal on average takes larger steps compared to when $\rho$ is small. A large $\rho$ results in faster movement but with smaller acceptance rates. A small $\rho$ gives slow movement but higher acceptance rate. To measure the mixing we look at the ACF for the sampled breakpoints. Fast mixing implies that the ACF decreases fast, while slow mixing gives autocorrelation for many iterations. As we can see in figure \ref{fig:acf} the ACF declines the fastest when $\rho$ is around 0.025 - 0.0325, for this $\rho$ we get an acceptance factor of approximately 30\% as seen in figure \ref{fig:accept_rho}, this is in line with the general recommendation.
+
+For the following attempts we use $10 000$ samples a burn in of $1000$ and $\Psi = 20$.
 
 \begin{figure}[H]
     \centering
@@ -176,7 +178,7 @@ Another parameter specified when initiating the algorithm is the parameter $\rho
 \begin{figure}[H]
     \centering
     \includegraphics[width = 1.0\textwidth]{images/ACF.png} 
-    \caption{ACF for t given different values of $\rho$}
+    \caption{ACF for the breakpoints for different timesteps and different values of $\rho$}
     \label{fig:acf}
 \end{figure}
 
