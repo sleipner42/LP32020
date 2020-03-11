@@ -41,32 +41,40 @@ For the Monte Carlo simulation, we simulate $100000$ pairs of uncorrelated norma
 \section{Results}
 
 \begin{table}[H]
+    \centering
     \caption{Asset VaR using a discrete loss distribution}
     \label{tab:discrete_VaR_asset}
 \end{table}
 
 \begin{table}[H]
+    \centering
     \caption{Asset VaR using a normal approximation where $\mu = 0$}
     \label{tab:normal_VaR_asset}
 \end{table}
 
 \begin{table}[H]
+    \centering
     \caption{Portfolio VaR using a normal approximation where $\mu = 0$ and $\rho = 0$}
     \label{tab:normal_VaR_portfolio}
+    \include{tables/var}
 \end{table}
 
 \begin{table}[H]
+    \centering
     \caption{Portfolio VaR using Monte Carlo simulation for $\rho = 0.35$ and $\rho = 0$}
     \label{tab:MC_VaR_portfolio}
+    \include{tables/final_var}
 \end{table}
 
 \begin{table}[H]
-    \caption{Description of the Monte Carlo loss simulation}
+    \centering
+    \caption{Description of the Monte Carlo loss distribution}
     \label{tab:MC_description}
+    \include{tables/statistics}
 \end{table}
 
 \section{Discussion}
-When comparing the Monte Carlo loss simulation VaR in table \ref{tab:MC_VaR_portfolio} with the normal approximated VaR in table \ref{tab:normal_VaR_portfolio} we see that the normal approximation tends to hold reasonably well for low confidence levels, but give different values for higher confidence levels. The reason for this is that the Monte Carlo simulation does not assume that the loss is normal distributed. In table \ref{tab:MC_description} we see that the loss distribution is very different from a normal distribution.
+When comparing the Monte Carlo loss simulation VaR in table \ref{tab:MC_VaR_portfolio} with the normal approximated VaR in table \ref{tab:normal_VaR_portfolio} we see that the normal approximation tends to hold reasonably well for low confidence levels, but give different values for higher confidence levels. The reason for this is that the Monte Carlo simulation does not assume that the loss is normal distributed. In table \ref{tab:MC_description} we see that the loss distribution is very different from a normal distribution. With a positive skew and a very high kurtosis (compared to $3$ for the normal distribution) we can conclude that the loss distribution has wide tails as well as being asymmetric.
 
 
 
