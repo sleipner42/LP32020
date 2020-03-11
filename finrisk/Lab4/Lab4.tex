@@ -12,10 +12,10 @@
 
 
 \pagestyle{fancy}
-\lhead{Computer Excercise 2}
+\lhead{Computer Excercise 4}
 \rhead{Kristoffer Nordström \& Noah Hansson}
 
-\title{Computer Exercise 3 - NEKN83}
+\title{Computer Exercise 4 - NEKN83}
 \author{Kristoffer Nordström \\ kr8245no-s@student.lu.se \and  Noah Hansson \\ no3822ha-s@student.lu.se}
 \date{\today}
 
@@ -29,12 +29,45 @@
 \maketitle
 
 \section{Introduction}
+When estimating VaR for a portfolio one often have to make assumptions about the underlying loss functions in order to simplify the calculations. A method where we don't need to make the same assumptions is when using Monte Carlo simulation of portfolio losses. Here we will use Monte Carlo simulation of a portfolio VaR and compare it to the normal approximated portfolio VaR.
 
 \section{Method}
+In this assignment we will look at a portfolio consisting of a BBB-rated and an A-rated loan. Each loan has an assumed probability of credit rating migration, and the loss for each transition is calculated as the change in the face value of the loan. The assets are assumed to correlate with $\rho = 0.35$.
+
+First we calculate the normal approximated portfolio VaR, under the simplified model of the assets being uncorrelated, by finding the standard deviation of the portfolio losses, $\sigma_P = 3.35$ and by assuming that the mean $\mu = 0$. Then the VaR for different certainty levels is evaluated as the confidence levels on the normal distribution.
+
+For the Monte Carlo simulation, we simulate $100000$ pairs of uncorrelated normal distributed samples. From these pairs of samples we then create new pairs of samples correlated with $\rho = 0.35$ by use of Cholesky Decomposition. We then compare these samples with the distribution quantiles of the credit migration probabilities, to simulate $100000$ possible portfolio credit rating outcomes. For each outcome we then evaluate the portfolio loss, and then use the basic historical simulation to estimate the portfolio VaR.
 
 \section{Results}
 
+\begin{table}[H]
+    \caption{Asset VaR using a discrete loss distribution}
+    \label{tab:discrete_VaR_asset}
+\end{table}
+
+\begin{table}[H]
+    \caption{Asset VaR using a normal approximation where $\mu = 0$}
+    \label{tab:normal_VaR_asset}
+\end{table}
+
+\begin{table}[H]
+    \caption{Portfolio VaR using a normal approximation where $\mu = 0$ and $\rho = 0$}
+    \label{tab:normal_VaR_portfolio}
+\end{table}
+
+\begin{table}[H]
+    \caption{Portfolio VaR using Monte Carlo simulation for $\rho = 0.35$ and $\rho = 0$}
+    \label{tab:MC_VaR_portfolio}
+\end{table}
+
+\begin{table}[H]
+    \caption{Description of the Monte Carlo loss simulation}
+    \label{tab:MC_description}
+\end{table}
+
 \section{Discussion}
+When comparing the Monte Carlo loss simulation VaR in table \ref{tab:MC_VaR_portfolio} with the normal approximated VaR in table \ref{tab:normal_VaR_portfolio} we see that the normal approximation tends to hold reasonably well for low confidence levels, but give different values for higher confidence levels. The reason for this is that the Monte Carlo simulation does not assume that the loss is normal distributed. In table \ref{tab:MC_description} we see that the loss distribution is very different from a normal distribution.
+
 
 
 \end{document}
