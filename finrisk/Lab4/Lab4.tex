@@ -1,5 +1,5 @@
 \documentclass[a4paper]{article}
-\usepackage[bottom=10em]{geometry}
+\usepackage[margin = 7em]{geometry}
 
 \usepackage[T1]{fontenc}	
 \usepackage{amsmath}
@@ -44,14 +44,14 @@ For the Monte Carlo simulation, we simulate $100000$ pairs of uncorrelated norma
     \centering
     \caption{Asset VaR using a discrete loss distribution}
     \label{tab:discrete_VaR_asset}
-    \include{table/discrete_var.tex}
+    \include{tables/discrete_var}
 \end{table}
 
 \begin{table}[H]
     \centering
     \caption{Asset VaR using a normal approximation where $\mu = 0$}
     \label{tab:normal_VaR_asset}
-    \include{table/dist_var.tex}
+    \include{tables/dist_var}
 \end{table}
 
 \begin{table}[H]
@@ -78,6 +78,6 @@ For the Monte Carlo simulation, we simulate $100000$ pairs of uncorrelated norma
 \section{Discussion}
 When comparing the Monte Carlo loss simulation VaR in table \ref{tab:MC_VaR_portfolio} with the normal approximated VaR in table \ref{tab:normal_VaR_portfolio} we see that the normal approximation tends to hold reasonably well for low confidence levels, but give different values for higher confidence levels. The reason for this is that the Monte Carlo simulation does not assume that the loss is normal distributed. In table \ref{tab:MC_description} we see that the loss distribution is very different from a normal distribution. With a positive skew and a very high kurtosis (compared to $3$ for the normal distribution) we can conclude that the loss distribution has wide tails as well as being asymmetric.
 
-
+When the assets are correlated we see that the VaR tends to increase for the higher confidence levels. This is due to when the assets are correlated, the extreme events tend to happen \textit{together}. When the correlation increases, the loss distribution kurtosis increases as the random factor is less likely to "cancel out". An economic interpretation is that as the correlation increases, the portfolio becomes worse diversified, increasing the portfolio risk. As the portfolio risk increases the VaR increases.
 
 \end{document}
