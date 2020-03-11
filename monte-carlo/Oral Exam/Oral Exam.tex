@@ -1,0 +1,504 @@
+\documentclass[a4paper]{article}
+
+\usepackage[T1]{fontenc}	
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}
+\setlength{\floatsep}{6pt plus 1.0pt minus 2.0pt}
+\setlength{\textfloatsep}{10pt plus 1.0pt minus 2.0pt}
+
+\begin{document}  
+
+\tableofcontents
+
+\newpage
+
+\section{Random Number Generation}
+
+\subsection[The inversion method]{Explain how to generate pseudo-random numbers using the inversion method. Prove that the output has the desired distribution. What are the pros and cons of this method?}
+To generate psuedo-random number one needs to first find a way to generate pseudo-random uniformly distributed numbers. Once one has a way of generating uniform numbers, random numbers belonging to a known distribution can be sampled by its inverse probability distribution function.
+
+Assuming we have access to $u \sim (0,1)$ we can define the inverse distribution function of F as:
+\begin{equation}
+    F^\leftarrow(u) \triangleq \inf\{x\in\mathbb{R}: F(x) \geq u\}
+\end{equation}
+
+We can then draw random samples $U$, and then find the desired samples $X$ as:
+\begin{equation}
+    X = F^\leftarrow(U)
+\end{equation}
+
+
+\begin{proof}
+    First we for $ x\in\mathbb{R}$ and $u \in(0,1)$ establish the relation:
+    \begin{equation}
+        F(x)\geq u\iff x\geq F^\leftarrow(u)
+    \end{equation}
+    We then define the set $S_u$ as $S_u :=\{x^\prime \in \mathbb{R} : F(x^\prime)\geq u\}$ \\
+    $\implies$ as $F(x) \geq u \implies x \in S_u$ \\
+    $\implies x \geq \inf S_u = F^\leftarrow(u)$ \\
+
+    $\impliedby$ A distribution function is Monotonically increasing and right continous. \\
+    Right Continuity of $F$ gives closed left end point $\implies \inf S_u \in S_u$. This gives that $S_u$ is on the form $[F^\leftarrow(u),\infty)$. So $x\geq F^\leftarrow(u)$ implies $x\in S_u$\\
+    For all points $x$ in the set $S_u$ we have that $F(x) \geq u$. \\Thus, $x \geq \inf S_u = F^\leftarrow(u) \implies F(x) \geq u$.
+
+    Now
+    \begin{equation*}
+        F_X(x) = \mathbb{P}(X\leq x) = \mathbb{P}(F^\leftarrow(U) \leq x) = \mathbb{P}(F(x) \geq U) = \mathbb{P}(U \leq F(x)) = F(x)
+    \end{equation*}
+\end{proof}
+
+Pros:
+\begin{itemize}
+    \item Easy to implement if $F^\leftarrow$ is easy to evaluate
+    \item Every uniform sample gives a transformed sample 
+\end{itemize}
+
+Cons:
+\begin{itemize}
+    \item Not all distributions have an inverse $F^\leftarrow$
+    \item Only works for univariate random numbers
+    \item We need to know the normalizing constant
+\end{itemize}
+
+\newpage
+\subsection[Rejection Sampling]{Explain how to generate pseudo-random numbers using rejection sampling. Prove that the output has the desired distribution. What are the pros and cons of this method?}
+
+If we do not know the inverse $F$ or the normalizing constant of the density $f$ we can use rejection sampling to sample from the density. To do rejection sampling we find a known distribution $g$ such that $f(x) \leq Kg(x)$ for all $x\in\mathbb{R}^d$ and for some constant $K < \infty$.
+
+We then draw samples $X^\star$ from g, and only keep the sample with a probability of $\alpha = \frac{f(x^\star)}{Kg(x^\star)}$.
+
+When using rejection sampling the output will have the density function $f$. Moreover, the average number of trials needed before acceptance is $K$.
+
+\begin{proof}
+    To show that the stored values have the desired distribution we need to show that:
+    \begin{equation}
+        F_X(x) = \mathbb{P}(X^\star\leq x) = \mathbb{P}\left(Y\leq x | U\leq \frac{f(Y)}{Kg(Y)}\right) = \mathbb{P}(X\leq x) = F(x) 
+    \end{equation}
+
+    We therefore start rewriting the expression
+    \begin{equation}
+        \begin{gathered}
+            \mathbb{P}(X^\star \leq x) = \mathbb{P}\left(Y\leq x | U\leq \frac{f(Y)}{Kg(Y)}\right) \overset{Bayes}{=}\frac{\mathbb{P}\left(Y\leq x\wedge U \leq \frac{f(Y)}{Kg(Y)}\right)}{\mathbb{P}\left(U\leq \frac{f(Y)}{Kg(Y)}\right)} \\
+            = \frac{\int_{-\infty}^x\left(\int_0^{f(z)/Kg(z)}du \right) g(z)dz}{\int_{-\infty}^\infty\left(\int_0^{f(z)/Kg(z)}du \right) g(z)dz} = \frac{\int_{-\infty}^x\frac{f(z)}{Kg(z)}g(z)dz}{\int_{-\infty}^\infty\frac{f(z)}{Kg(z)}g(z)dz} \\
+            = \frac{\int_{-\infty}^xf(z)dz}{\int_{-\infty}^\infty f(z)dz} = \int_{-\infty}^xf(z)dz = F(x)
+        \end{gathered}
+    \end{equation}
+\end{proof}
+
+Pros:
+\begin{itemize}
+    \item Lets us sample from any density know up to a normalizing constant
+    \item Works for multivariate distributions
+\end{itemize}
+
+Cons:
+\begin{itemize}
+    \item Requires more computer power than the inversement method
+    \item If K is large the method is inefficient
+\end{itemize}
+\newpage
+\section{Monte Carlo Integration}
+
+\subsection[The Monte Carlo Method and Importance Sampling]{Explain—in full detail—the basic Monte Carlo sampler, the importance sampling algorithm, and self-normalized importance sampling}
+
+The objective of the Monte Carlo sampler is to compute some expectation
+\begin{equation}
+    \tau \triangleq \mathbb{E}(\phi(X)) = \int_A\phi(x)f(x)dx
+\end{equation}
+Where
+\begin{itemize}
+    \item $X$ is a random variable in $A \subset \mathbb{R}^d$
+    \item $f$ is the probability density of $X$
+    \item $\phi$ is a function such that the above expectation is finite
+\end{itemize}
+
+By the law of large numbers, as $N$ tends to infinity,
+\begin{equation}
+    \tau_N \triangleq \frac{1}{N}\sum_{i=1}^N\phi(X_i) \rightarrow \tau = \mathbb{E}(\phi(X))
+\end{equation}
+
+So by generating a large amount of samples $X = [X_1, X_2, \dots, X_N] \sim f(X)$ we can find an estimate of $\tau$.
+
+When constructing a Monte Carlo sampler we may sometimes find that it is hard to sample from $f$, or that the function $\phi$ and $f$ has a dissimilar support. To reduce the variance in these cases, we can use Importance Sampling.
+
+The basis of importance sampling is to find an importance weight function \begin{equation}
+    \omega = \frac{f(x)}{g(x)}
+\end{equation}
+where g is an instrumental density with support such that $g(x) = 0 \implies \phi(x)f(x) = 0$. We can now compute $\tau$ as 
+\begin{equation}
+    \tau = \mathbb{E}_g(\phi(X)\omega(X))
+\end{equation}
+Which has a lower variance than the crude Monte Carlo sampler.
+
+If $f$ is only known up to a normalizing constant $f(x) = z(x)/c$ we can also use Self-normalized Importance Sampling where we define
+\begin{equation}
+    \omega = \frac{z(x)}{g(x)}
+\end{equation}
+
+Here we find $\tau$ by also estimating $c$ as $c = \mathbb{E}_g(\omega(X))$. This gives an estiamte of $\tau$ as:
+\begin{equation}
+    \tau = \frac{\mathbb{E}_g(\phi(X)\omega(X))}{\mathbb{E}_g(\omega(X))}
+\end{equation}
+
+\newpage
+\subsection[The Central Limit Theorem for Monte Carlo]{Prove that the basic Monte Carlo sampler satisfies a central limit theorem and provide an expression of the asymptotic variance. How does this apply to importance sampling? How can this be used for constructing confidence intervals? How can this be used for designing the
+instrumental distribution for an importance sampling problem?}
+
+Under the assumption that $\mathbb{V}(\phi(X)) < \infty$ the central limit theorem implies that:
+\begin{equation}
+    \sqrt{N}(\tau_N-\tau) \rightarrow N(0,\mathbb{V}(\phi(X)))
+\end{equation}
+Where we define
+\begin{equation}
+    \sigma^2(\phi) \triangleq \mathbb{V}(\phi(X))
+\end{equation}
+This lets us construct a two-sided confidence interval as:
+\begin{equation}
+    I_\alpha = (\tau_N - \lambda_{\alpha/2}\frac{\sigma(\phi)}{\sqrt{N}}, \tau_N + \lambda_{\alpha/2}\frac{\sigma(\phi)}{\sqrt{N}})
+\end{equation}
+Where $\lambda_p$ denotes the $p$-quantile of the standard normal distribution.
+
+To get good estimates of $\tau$ it is desirable to get a low variance of the estimates. In the case of Importance Sampling, the Central Limit Theorem provides that
+\begin{equation}
+    \sqrt{N}(\tau_N-\tau) \rightarrow N(0,\sigma_g^2(\phi\omega))
+\end{equation}
+Where $\sigma_g^2(\phi\omega) = \mathbb{V}_g(\phi(X)\omega(X))$.
+
+Therefore, when designing an importance sampler, one should select a distribution $g(x)$ such that $\omega(x)$ is as close to being constant in the support of $f(x)\phi(x)$ as possible to get the lowest possible variance.
+
+\newpage
+\section{Variance reduction for Monte Carlo methods}
+
+\subsection[Control Variates]{Describe how the variance of the standard Monte Carlo sampler can be reduced using control variates}
+Assume that we have a real valued random variable $Y$, reffered to as a control variate, such that $\mathbb{E}(Y) = m$ and $\phi(X)$ and $Y$ can be simulated at the same complexity as $\phi(X)$.
+
+Then, for some $\beta \in \mathbb{R}$,
+\begin{equation}
+    Z = \phi(X) + \beta(Y-m)
+\end{equation}
+So that
+\begin{equation}
+    \mathbb{E}(Z) = \mathbb{E}(\phi(X)) + \beta(\mathbb{E}(Y)-m) = \tau
+\end{equation}
+
+If $\phi(X)$ and $Y$ have covariance $\mathbb{C}(\phi(X),Y)$ it holds that
+\begin{equation}
+    \mathbb{V}(Z) = \mathbb{V}(\phi(X)) + 2\beta\mathbb{C}(\phi(X),Y) + \beta^2\mathbb{V}(Y)
+\end{equation}
+
+The optimal $\beta$ is found by differentiating w.r.t $\beta$ and minimizing, which yields:
+\begin{equation}
+    \beta^\star = -\frac{\mathbb{C}(\phi(X),Y)}{\mathbb{V}(Y)}
+\end{equation}
+
+Plugging in $\beta^\star$ gives
+\begin{equation}
+    \mathbb{V}(Z) = \mathbb{V}(\phi(X))\{1-\rho(\phi(X),Y)^2\}
+\end{equation}
+
+Where
+\begin{equation}
+    \rho(\phi(X),Y) \triangleq \frac{\mathbb{C}(\phi(X),Y)}{\sqrt{\mathbb{V}(\phi(X))}\sqrt{\mathbb{V}(Y)}}
+\end{equation}
+is the correlation between $\phi(X)$ and $Y$.
+
+If $|\rho(\phi(X),Y)|$ is close to $1$ we can expect a large variance reduction.
+
+\newpage
+\subsection[Antithetic Sampling]{Describe the principle of antithetic sampling. In addition, state a theorem that is useful in
+this context and give an example of an application}
+We wish to estimate $\tau = \mathbb{E}_f(\phi(X))$. Let $V \triangleq \phi(X)$, so that $\tau = \mathbb{E}(V)$.
+Assume that we can generate a variable $V^\prime$ such that
+\begin{itemize}
+    \item $\mathbb{E}(V^\prime) = \tau$
+    \item $\mathbb{V}(V^\prime) = \mathbb{V}(V) = \sigma^2(\phi)$
+    \item $V^\prime$ can be simulated at the same complexity as $V$
+\end{itemize}
+Then for
+\begin{equation}
+    W \triangleq \frac{V+V^\prime}{2}
+\end{equation}
+it holds that $\mathbb{E}(W) = \tau$ and
+\begin{equation}
+    \mathbb{V}(W) = \mathbb{V}(\frac{V + V^\prime}{2}) = \frac{1}{2}(\mathbb{V}(V) + \mathbb{C}(V,V^\prime))
+\end{equation}
+
+If we find a $V^\prime$ such that the antithetic variables $V$ and $V^\prime$ are negatively correlated, we can reduce the variance of the estimate by only using half the amount of samples.
+
+To find $V^\prime$ we can use the following theorem:
+Let $V = \varphi(U)$, where $\varphi : \mathbb{R} \rightarrow \mathbb{R}$ is a monotone function. Moreover, assume that there exists a non-increasing transform $T : \mathbb{R} \rightarrow \mathbb{R}$ such that $U \overset{d}{=} T(U)$. Then $V = \varphi(U)$ and $V^\prime = \varphi(T(U))$ are iid and
+\begin{equation}
+    \mathbb{C}(V,V^\prime) = \mathbb{C}(\varphi(U),\varphi(T(U))) \leq 0
+\end{equation}
+
+A handy non-increasing transform to use is $T(u) = 1-u$. Since an inverse probability distribution is monotone a good example is to create antithetic samples where
+\begin{itemize}
+    \item $V = \phi(F^\leftarrow(u))$
+    \item $V^\prime = \phi(F^\leftarrow(1-u))$
+\end{itemize}
+
+\newpage
+
+\section{Sequential Monte Carlo methods}
+
+\subsection[Sequential Importance Sampling]{Formulate the sequential Monte Carlo problem and give an example of an application. In addition, derive—in full detail—the sequential importance sampling (SIS) algorithm}
+
+Monte Carlo methods can also be applied to estimating the expectation of sequences of random nummbers $\mathbb{E}(\tau_n)$:
+\begin{equation}
+    \tau_n = \mathbb{E}_{f_n}(\phi(X_{0:n})) = \int_{X_n}\phi(x_{0:n})f_n(x_{0:n})dx_{0:n} 
+\end{equation}
+over spaces of increasing dimension, and where the densities $(f_n)_{n\geq 0}$ are known up to normalizing constants.
+
+Examples of applications are:
+\begin{itemize}
+    \item Simulation of extreme events
+    \item Estimation of hidden markov models
+    \item Estimation of self-avoiding random walks
+\end{itemize}
+
+The most basic sequential Monte Carlo sampler is the Sequential Importance Sampler (SIS). The algorithm works as follows:
+
+Call each draw $X_i^{0:n} = (X_i^0, \dots , X_i^n)$ a particle. Also define importance weights as
+\begin{equation}
+    \omega_n^i \triangleq \omega_n(X_i^{0:n})
+\end{equation}
+
+The estimate is calculated recursively. Assume that we already have particles $X_i^{0:n}$ sampled from $g_n(x_{0:n})$ such that
+\begin{equation}
+    \sum_{i=1}^N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}\phi(X_i^{0:n}) \approx \mathbb{E}_{f_n}(\phi(X_{0:n}))
+\end{equation}
+
+where, as usual,
+\begin{equation}
+    \omega_n^i = \omega_n(X_i^{0:n}) = \frac{z_n(X_i^{0:n})}{g_n(X_i^{0:n})}
+\end{equation}
+
+The key trick is to select an instrumental distribution $g$ such that
+\begin{equation}
+    g_{n+1}(x_{0:n+1}) = g_{n+1}(x_{n+1}|x_{0:n})g_{n+1}(x_{0:n}) = g_{n+1}(x_{n+1}|x_{0:n})g_n(x_{0:n})
+\end{equation}
+
+This lets us for any draw $X_{0:n} \sim g_n(x_{0:n})$ get another draw $X_{0:n+1}$ from drawing \\ $X_{n+1} \sim g_{n+1}(x_{n+1}|x_{0:n} = X_{0:n})$ and adding then letting $X_{0:n+1} = (X_{0:n}, X_{n+1})$.
+
+Finally, we update the weights as 
+\begin{equation}
+    \begin{gathered}
+        w_{n+1}^i = \frac{z_{n+1}(X_i^{0:n+1})}{g_{n+1}(X_i^{0:n+1})} \\
+        = \frac{z_{n+1}(X_i^{0:n+1})}{z_{n}(X_i^{0:n})g_{n+1}(X_i^{0:n+1}|X_i^{0:n})} \times \frac{z_{n}(X_i^{0:n})}{g_{n}(X_i^{0:n})} \\
+        = \frac{z_{n+1}(X_i^{0:n+1})}{z_{n}(X_i^{0:n})g_{n+1}(X_i^{0:n+1}|X_i^{0:n})} \times \omega_n^i
+    \end{gathered}
+\end{equation}
+
+Which gives us the updated estiamte 
+\begin{equation}
+    \sum_{i=1}^N\frac{\omega_{n+1}^i}{\sum_{l=1}^N\omega_{n+1}^l}\phi(X_i^{0:n+1}) \approx \mathbb{E}_{f_{n+1}}(\phi(X_{0:n+1}))
+\end{equation}
+
+\newpage
+
+\subsection[Sequential Importance Sampling with Resampling]{Explain the pros and cons of the basic SIS algorithm and describe how SIS can be improved by means of an additional selection step (yielding the SISR algorithm). Prove that selection does not add bias to the estimator}
+
+While the SIS algorithm creates an intuitive way of creating an online estimator there is still one core problem. Due to the weights being generated through subsequent multiplications the weights start to deteriorate as $N$ grows, leading to bad estimates for long sequences. To combat this problem the SIS algorithm can be improved through resampling, yielding the SISR algorithm.
+
+The key idea of the resampling algorithm is to duplicate particles with large weights and kill particles with small weights. To do this, all particles $X_1^{0:n} \dots X_N^{0:n}$ produced by the SIS will at a given interval be replaced with replacement particles $\tilde{X_1^{0:n}} \dots \tilde{X_N^{0:n}}$ randomly drawn from the earlier particles with probabilities given by the normalized importance weights. When resampling, it is important that:
+\begin{itemize}
+    \item The total number of particles remains constant
+    \item The weights are set equal efter resampling
+    \item It should hold that: 
+    \begin{equation}
+        \mathbb{E}[N_n^i|X^{0:n}] = N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}, \quad i = 1,2,\dots,N
+    \end{equation}
+\end{itemize}
+This ensures that the resampling does not add any bias to the estimator
+\begin{proof}
+    We want to show that
+    \begin{equation}
+        \mathbb{E}(\tau_n^{SISR}) = \mathbb{E}\left(\frac{1}{N}\sum_{i=1}^N\phi(\tilde{X_i^{0:n}})\right) = \mathbb{E}\left(\sum_{i=1}^N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}\phi(\tilde{X_i^{0:n}})\right) = \mathbb{E}(\tau_n^{SIS})
+    \end{equation}
+    To do this we introduce $N_i^\star$ copies of $X_i^{0:n}$ in $\tilde{X_i^{0:n}}$ where
+    \begin{equation}
+        \mathbb{E}(N_i^\star|X_i^{0:n}) = N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}
+    \end{equation}
+    Continuing, we rewrite $\mathbb{E}(\tau_n^{SISR})$ as:
+    \begin{equation}
+        \begin{gathered}
+            \mathbb{E}_X(\tau_n^{SISR}) = \mathbb{E}_X\left(\frac{1}{N}\sum_{i=1}^N\phi(\tilde{X_i^{0:n}})\right) = \mathbb{E}_X\left(\frac{1}{N}\sum_{i=1}^NN_i^\star\phi(X_i^{0:n})\right) \\
+            \overset{tower}{=}\mathbb{E}_X\left[\mathbb{E}_N\left(\frac{1}{N}\sum_{i=1}^N(N_i^\star\phi(X_i^{0:n}))|X_i^{0:n}\right)\right] = \mathbb{E}_X\left(\frac{1}{N}\sum_{i=1}^N N\frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}\phi(X_i^{0:n})\right) \\
+            = \mathbb{E}_X\left(\sum_{i=1}^N \frac{\omega_n^i}{\sum_{l=1}^N\omega_n^l}\phi(X_i^{0:n})\right) = \mathbb{E}(\tau_n^{SIS})
+        \end{gathered}
+    \end{equation}
+\end{proof}
+
+\newpage
+
+\section{Markov Chain Monte Carlo methods}
+
+\subsection[Markov Chains]{Give accounts of the following: Markov chain, stationary distribution, ergodicity, and geometric ergodicity. Sketch the proof of a law of large numbers for geometrically ergodic Markov
+chains and state a central limit theorem}
+
+A Markov Chain on $X \subseteq \mathbb{R}^d$ is a stochastic process taking values in $X$ such that
+\begin{equation}
+    \mathbb{P}(X_{k+1} \in A | X_0, \dots, X_k) = \mathbb{P}(X_{k+1} \in A | X_k)
+\end{equation}
+Where the density $q$ of the distribution of $X_{k+1}$ given $X_k = x$ is called the transition density of $X_k$. Consequently,
+\begin{equation}
+    \mathbb{P}(X_{k+1} \in A | X_k = x_k) = \int_Aq(x_{k+1}|x_k)dx_{k+1}
+\end{equation}
+
+A distribution $\pi(X)$ is said to be stationary if 
+\begin{equation}
+    \int q(x|z)\pi(z)dz = \pi(x)
+\end{equation}
+If a chain starts in the stationary distribution, it will always stay in the stationary distribution. In this case the chain is also stationary.
+
+A Markov chain with stationary distribution $\pi$ is called ergodic if for all initial distributions $\chi$,
+\begin{equation}
+    \sup_{A\subseteq X}|\mathbb{P}(X_n \in A) - \pi(A)| \rightarrow 0, \quad as \quad n \rightarrow \infty
+\end{equation}
+Ergodicity means that the chain is both recurrent and aperiodic, which means that the initial distribution does not matter for the stationary distribution.
+
+Assume that there exists a density $\mu(x)$ and a constant $\epsilon > 0$ such that for all $x,z \in X$,
+\begin{equation}
+    q(z|x) \geq \epsilon\mu(z)
+\end{equation}
+Then the chain is geometrically ergodic, i.e there is $\rho < 1$ such that for all $\chi$
+\begin{equation}
+    \sup_{A\subseteq X}|\mathbb{P}(X_n \in A) - \pi(A)| \leq \rho^n
+\end{equation}
+Which means that the chain forgets its initial distribution geometrically fast.
+
+For a geometrically ergodic Markov Chain LLN gives that
+\begin{equation}
+    \mathbb{P}\left(|\frac{1}{n}\sum_{k=1}^n\phi(X_k) - \int\phi(x)\pi(x)dx| \geq \epsilon\right) \rightarrow 0 \quad as \quad n\rightarrow\infty
+\end{equation}
+
+Which means that it is possible to estimate expectations
+\begin{equation}
+    \tau = \mathbb{E}(\phi(X)) = \int_X\phi(x)f(x)dx
+\end{equation}
+by simulating N steps of a markov chain with stationary distribution $f$ and letting
+\begin{equation}
+    \tau_N = \frac{1}{N}\sum_{k=1}^N\phi(X_k) \rightarrow \tau, \quad as \quad N \rightarrow \infty
+\end{equation}
+
+Proof?
+
+One may also establish a central limit theorem for MCMC chains at stationarity. Let
+\begin{equation}
+    r(l) = \lim_{n\to \infty}\mathbb{C}(\phi(X_{n+l}),\phi(X_n))
+\end{equation}
+be the covariance function of the MCMC chain at stationarity. Then it holds that:
+\begin{equation}
+    \sqrt{N}(\tau_n-\tau) \overset{d}{\rightarrow} N(0,\sigma^2) \quad as \quad N \rightarrow \infty
+\end{equation}
+Where
+\begin{equation}
+    \sigma^2 = r(0) + 2\sum_{l=1}^\infty r(l)
+\end{equation}
+
+\newpage
+
+\subsection[The Metropolis-Hastings algorithm]{Explain the Metropolis-Hastings algorithm and prove that it allows the target distribution as
+stationary distribution}
+
+The Metropolis Hastings algorithm is an algorithm from simulating a Markov Chain with a desired distribution $f$. Here we assume that we can simulate from a transition density $r(z|x)$ referred to as the proposal kernel on $X$.
+
+The algorithm simulates a sequence of values, forming a Markov Chain on $X$, by generating a sample $X^\star \sim r(z|X_k)$ and then setting
+\begin{equation}
+    X_{k+1} = 
+    \begin{cases}
+        X^\star \quad \text{w. pr} \quad \alpha(X_k,X^\star) = 1 \wedge \frac{f(X^\star)r(X_k|X^\star)}{f(X_k)r(X^\star|X_k)} \\
+        X_k \quad \text{otherwise}
+    \end{cases}
+\end{equation}
+
+Here the part $f(x^\star)/f(X_k)$ can be interpreted of how much "better" the proposed state is compared to the old state (as measured by $f$). The part $r(X_k|X\star)^/r(x^\star|X_k)$ can be interpreted as the inverse probability of reaching that state. I.e, states that are harder to reach will give a higher acceptance probability.
+
+The chain generated by the MH sampler will then have $f$ as the stationary distribution.
+\begin{proof}
+    We begin by stating a lemma that the transition kernel of the MH algorithm is given by:
+    \begin{equation}
+        q(z|x) = \alpha(x,z)r(z|x) + p_R(x)\delta_x(z)
+    \end{equation}
+    where
+    \begin{equation}
+        p_R(x) = 1 - \int\alpha(x,z)r(z|x)dz
+    \end{equation}
+    Thereafter, we want to show that the simulated markov chain satisfies the global balance equation
+    \begin{equation}
+        \int q(z|x)f(x)dx = q(z)
+    \end{equation}
+    We plug in our expression for $q(z|x)$:
+    \begin{equation}
+        \int q(z|x)f(x)dx = \int\left(\alpha(x,z)r(z|x)f(x) + p_R(x)\delta_x(z)f(x)\right)dx
+    \end{equation}
+    We can then rewrite
+    \begin{equation}
+        \begin{gathered}
+            \alpha(x,z)r(z|x)f(x) = \left(1 \wedge \frac{f(z)r(x|z)}{f(x)r(z|x)}\right)f(x)r(z|x) \\
+            = \left(1 \wedge \frac{f(x)r(z|x)}{f(z)r(x|z)}\right)f(z)r(x|z) \\
+            = \alpha(x,z)r(x|z)f(z)
+        \end{gathered}
+    \end{equation}
+    Which then lets us express the global balance equation as:
+    \begin{equation}
+        \begin{gathered}
+            \int q(z|x)f(x)dx = \int\left(\alpha(x,z)r(x|z)f(z) + p_R(x)\delta_x(z)f(x)\right)dx \\ 
+            = f(z)\int\alpha(x,z)r(x|z)dx + p_R(z)f(z) \\
+            = f(z)\left(\int\alpha(x,z)r(x|z)dx + 1 - \int\alpha(x,z)r(x|z)dx\right) = f(z)
+        \end{gathered}
+    \end{equation}
+    Which is what we wanted to show
+\end{proof}
+
+\newpage
+
+\subsection[The Gibbs sampler and hybrid samplers]{Explain the Gibbs sampler and the hybrid sampler. Motivate that the latter is a valid MCMC algorithm. Why is good mixing important for MCMC samplers? What can be said in general when it concerns mixing for the MCMC samplers treated in the course?}
+
+The Gibbs sampler is another algorithm for sampling a Markov Chain with a target distribution of $f$. The idea of the Gibbs sampler is to sample from a multivariate distribution one variable at a time, where earlier draws are used in the in the conditional probability of future draws. Given an initial draw $X_k$, $X_{k+1}$ are made as follows: 
+\begin{equation}
+    \begin{gathered}
+        X_{k+1}^1 \sim f_1(x^1|X_k^2,\dots,X_k^m) \\
+        X_{k+1}^2 \sim f_2(x^2|X_{k+1}k^1,X_k^3,\dots,X_k^m) \\
+        X_{k+1}^3 \sim f_3(x^3|X_{k+1}k^1,X_{k+1}^2,X_k^4,\dots,X_k^m) \\
+        \dots \\
+        X_{k+1}^m \sim f_m(x^m|X_{k+1}k^1,X_{k+1}^2,\dots,X_{k+1}^{m-1})\\
+    \end{gathered}
+\end{equation}
+
+It can be proven that the Gibbs sampler has $f$ as a stationary distribution and that it is geometrically ergodic.
+
+It is also possible to create a hybrid sampler between the Gibbs sampler and the MH algorithm. The hybrid sampler starts by using gibbs sampling for all variables with a known conditional distribution, and then inserts a MH step for the other variables. It can be proven that the resulting chain still satisfies the global balance equation and therefore results in a valid MCMC sampler.
+
+When using a MCMC sampler it is important to have good mixing. The mixing is a measurement of how the drawn samples correlate with the earlier samples. High mixing means that there is only weak correlation, which lets the Markov Chain quickly explore the parameter space. When the mixing is slow it may take a long time for the Chain to fully explore the parameter space which results in bad estimates or a slow algorithm.
+
+\textbf{What can be said about the MCMC samplers???}
+
+\newpage
+
+\section{Bootstrap}
+
+\subsection[Bootstrap]{Give account of parametric, semi-parametric, and non-parametric bootstrap}
+
+When making an estimate of a random variable $t(Y)$ one has to keep in mind that the estimate may be subject to randomness, giving different results each time. In the same way, the error $\Delta(y) = t(y)-\tau$ is a realisation of a random variable $\Delta(Y) = t(Y) - \tau$. The distribution of $\Delta(y)$ is often not known and is hard to estimate. 
+
+The bootstrap deals with this problem by estimating the empirical distribution $\mathbb{P}_0$ with $\hat{\mathbb{P}_0}$ from a series of measurements $y = (y_1, y_2,\dots,y_n)$. Then, any quantity involving $\mathbb{P}_0$ can be approximated by MC simulations using $\hat{\mathbb{P}_0}$.
+
+In the non-parametric bootstrap one does not make any assumptions on the distribution of the data apart from that the data is i.i.d. In the parametric bootstrap we assume that the data comes from a known parametric distribution. So instead of estimating the empirical distribution, we find an estimate of the parameters of the assumed distribtion and then sample bootstraps from there. The parametric bootstrap on average requires less data than the non-parametric bootstrap, but is however more sensitive to the assumption of the distribution.
+
+For a semi-parametric bootstrap, we assume a parametric model for the data, for instance
+\begin{equation}
+    Y_i = kx_i + m + \epsilon_i, \quad i\in\{1,2,\dots,n\}
+\end{equation}
+and a non-parametric model for the residuals $\epsilon_i$.
+
+Therefore, one begins by estimating the parametric part of the model, and then uses non-parametric bootstrap to estimate the residuals. Semi-parametric bootstrap is typically used for regression problems.
+
+\end{document}
